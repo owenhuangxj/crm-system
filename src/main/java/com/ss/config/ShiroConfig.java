@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ShiroConfig {
-
     @Bean
     public Realm realm() {
         return new UserRealm();
