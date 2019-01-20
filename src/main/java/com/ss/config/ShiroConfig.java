@@ -14,7 +14,6 @@ public class ShiroConfig {
     public Realm realm() {
         return new UserRealm();
     }
-
     @Bean
     public static DefaultAdvisorAutoProxyCreator getDefaultAdvisorAutoProxyCreator() {
         DefaultAdvisorAutoProxyCreator creator = new DefaultAdvisorAutoProxyCreator();
