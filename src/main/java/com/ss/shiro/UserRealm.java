@@ -74,21 +74,21 @@ public class UserRealm extends AuthorizingRealm {
         if (username == null) {
             throw new AccountException("用户名不能为空");
         }
-        SysUser userDB = userService.getOne(new QueryWrapper<SysUser>().eq("uname", username));
-        if (userDB == null) {
+        SysUser sysUser = userService.getOne(new QueryWrapper<SysUser>().eq("uname", username));
+        if (sysUser == null) {
             throw new UnknownAccountException("找不到用户（"+username+"）的帐号信息");
         }
 
         //查询用户的角色和权限存到SimpleAuthenticationInfo中，这样在其它地方
         //SecurityUtils.getSubject().getPrincipal()就能拿出用户的所有信息，包括角色和权限
-        Set<AuthVo> roles = roleService.getRolesByUserId(userDB.getUid());
-        Set<AuthVo> perms = permService.getPermsByUserId(userDB.getUid());
-        userDB.getRoles().addAll(roles);
-        userDB.getPerms().addAll(perms);
+        Set<AuthVo> roles = roleService.getRolesByUserId(sysUser.getUid());
+        Set<AuthVo> perms = permService.getPermsByUserId(sysUser.getUid());
+        sysUser.getRoles().addAll(roles);
+        sysUser.getPerms().addAll(perms);
 
-        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(userDB, userDB.getPwd(), getName());
-        if (userDB.getSalt() != null) {
-            info.setCredentialsSalt(ByteSource.Util.bytes(userDB.getSalt()));
+        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(sysUser, sysUser.getPwd(), getName());
+        if (sysUser.getSalt() != null) {
+            info.setCredentialsSalt(ByteSource.Util.bytes(sysUser.getSalt()));
         }
         return info;
     }

@@ -1,12 +1,17 @@
 package com.ss.config;
 
 import com.ss.shiro.UserRealm;
+import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
+import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
 import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
+import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.filter.DelegatingFilterProxy;
 
 @Configuration
 public class ShiroConfig {
@@ -40,9 +45,30 @@ public class ShiroConfig {
         chain.addPathDefinition("/page/401", "anon");
         chain.addPathDefinition("/page/403", "anon");
         chain.addPathDefinition("/page/index", "anon");
-
         //除了以上的请求外，其它请求都需要登录
         chain.addPathDefinition("/**", "authc");
         return chain;
+    }
+    /*@Bean
+    public FilterRegistrationBean delegatingFilterProxy(){
+        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
+        DelegatingFilterProxy proxy = new DelegatingFilterProxy();
+        proxy.setTargetFilterLifecycle(true);
+        proxy.setTargetBeanName("shiroFilter");
+        filterRegistrationBean.setFilter(proxy);
+        return filterRegistrationBean;
+    }*/
+
+    @Bean("shiroFilter")
+    public ShiroFilterFactoryBean shiroFilterFactoryBean() {
+        ShiroFilterFactoryBean filterFactoryBean = new ShiroFilterFactoryBean();
+        filterFactoryBean.setSecurityManager(securityManager());
+        return filterFactoryBean;
+    }
+    @Bean
+    public SecurityManager securityManager(){
+        DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
+        securityManager.setRealm(realm());
+        return securityManager;
     }
 }

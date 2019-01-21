@@ -15,7 +15,6 @@ spring:
     port: 6379
     password: crmfoo
   datasource:
-    #    driver-class-name: com.mysql.jdbc.Driver
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://129.204.70.43:3306/${db}?useUnicode=true&characterEncoding=UTF-8&userSSL=false&tinyIntlisBit=true&serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=CONVERT_TO_NULL
     username: crm_group23

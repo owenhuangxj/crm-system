@@ -1,7 +1,17 @@
-db: biu
+db: crm
+server:
+  port: 80
+  servlet:
+    #    context-path: /shengsiit
+    session:
+      cookie:
+        name: SSCRM
 spring:
+  profiles:
+    active: dev
+    include: druid,mybatisplus,shiro
   datasource:
-    druid:
-      url: jdbc:mysql://191.8.2.203:3306/${db}?characterEncoding=UTF-8&useSSL=false
-      username: root
-      password: admin
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://129.204.70.43:3306/${db}?useUnicode=true&characterEncoding=UTF-8&userSSL=false&tinyIntlisBit=true&serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=CONVERT_TO_NULL
+    username: crm_group23
+    password: Group23@2019

@@ -114,13 +114,13 @@ export const asyncRouterMap = [
     component: Layout,
     meta: {
       perm:'m:menu3',
-      title: '菜单3',
+      title: '学员管理',
       icon: 'chart'
     },
     children: [
-      { path: 'menu3_1', component: _import('menu/menu3_1'), name: 'menu3_1', meta: { perm:'m:menu3:1', title: '菜单3-1', icon: 'chart', noCache: true }},
-      { path: 'menu3_2', component: _import('menu/menu3_2'), name: 'menu3_2', meta: { perm:'m:menu3:2', title: '菜单3-2', icon: 'chart', noCache: true }},
-      { path: 'menu3_3', component: _import('menu/menu3_3'), name: 'menu3_3', meta: { perm:'m:menu3:3', title: '菜单3-3', icon: 'chart', noCache: true }}
+      { path: 'menu3_1', component: _import('menu/menu3_1'), name: 'menu3_1', meta: { perm:'m:menu3:1', title: '学员跟踪', icon: 'chart', noCache: true }},
+      { path: 'menu3_2', component: _import('menu/menu3_2'), name: 'menu3_2', meta: { perm:'m:menu3:2', title: '未分配简历', icon: 'chart', noCache: true }},
+      { path: 'menu3_3', component: _import('menu/menu3_3'), name: 'menu3_3', meta: { perm:'m:menu3:3', title: '定时任务', icon: 'chart', noCache: true }}
     ]
   },
 

@@ -6,14 +6,18 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.ss.vo.AuthVo;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.*;
-
-/**
- * created by CaiBaoHong at 2018/4/17 14:55<br>
- */
+@Data
 @TableName("sys_user")
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class SysUser extends Model<SysUser> {
 
     @TableId(type = IdType.ID_WORKER_STR)
@@ -22,7 +26,7 @@ public class SysUser extends Model<SysUser> {
     private String nick;    // 用户昵称，可改
     private String pwd;     // 已加密的登录密码
     private String salt;    // 加密盐值
-    private Boolean lock;   // 是否锁定
+    private Boolean locked;   // 是否锁定
     private Date created;   // 创建时间
     private Date updated;   // 修改时间
 
@@ -38,91 +42,4 @@ public class SysUser extends Model<SysUser> {
         return uid;
     }
 
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
-
-    public String getUname() {
-        return uname;
-    }
-
-    public void setUname(String uname) {
-        this.uname = uname;
-    }
-
-    public String getNick() {
-        return nick;
-    }
-
-    public void setNick(String nick) {
-        this.nick = nick;
-    }
-
-    public String getPwd() {
-        return pwd;
-    }
-
-    public void setPwd(String pwd) {
-        this.pwd = pwd;
-    }
-
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
-    }
-
-    public Boolean getLock() {
-        return lock;
-    }
-
-    public void setLock(Boolean lock) {
-        this.lock = lock;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-
-    public Date getUpdated() {
-        return updated;
-    }
-
-    public void setUpdated(Date updated) {
-        this.updated = updated;
-    }
-
-    public List<SysRole> getRoleList() {
-        return roleList;
-    }
-
-    public void setRoleList(List<SysRole> roleList) {
-        this.roleList = roleList;
-    }
-
-    public Set<AuthVo> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<AuthVo> roles) {
-        this.roles = roles;
-    }
-
-    public Set<AuthVo> getPerms() {
-        return perms;
-    }
-
-    public void setPerms(Set<AuthVo> perms) {
-        this.perms = perms;
-    }
 }
