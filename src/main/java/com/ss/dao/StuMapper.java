@@ -1,10 +1,13 @@
 package com.ss.dao;
 
+import com.ss.config.RedisCacheMybatis;
 import com.ss.entity.Student;
+import org.apache.ibatis.annotations.CacheNamespace;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 @Mapper
+@CacheNamespace(implementation = RedisCacheMybatis.class)
 public interface StuMapper {
 
     /**

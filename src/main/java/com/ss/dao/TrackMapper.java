@@ -1,10 +1,15 @@
 package com.ss.dao;
 
+import com.ss.config.RedisCacheMybatis;
 import com.ss.entity.Track;
+import org.apache.ibatis.annotations.CacheNamespace;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+@Mapper
+@CacheNamespace(implementation = RedisCacheMybatis.class)
 public interface TrackMapper {
 
     /**

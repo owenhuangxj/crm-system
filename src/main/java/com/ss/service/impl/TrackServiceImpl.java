@@ -135,7 +135,9 @@ public class TrackServiceImpl implements TrackService {
     @Override
     public List<Track> getTrackInfo(String stuNumber) {
         // 获取数据
+        System.out.println("aaa"+stuNumber);
         List<Track> tracks = tm.getTrackInfo(stuNumber);
+        System.out.println("sss"+tracks);
         for (Track track : tracks) {
             switch (track.getTrackStatus()) {
                 case "1":
