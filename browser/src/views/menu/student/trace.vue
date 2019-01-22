@@ -74,7 +74,8 @@
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column type="index" label="编号" width="55"></el-table-column>
         <el-table-column prop="flag" label="状态标识" width="120"></el-table-column>
-        <el-table-column prop="stuName" label="姓名" width="120"></el-table-column>
+        <el-table-column prop="stuNumber" label="学员编号" width="120"></el-table-column>
+        <el-table-column prop="stuName" label="学员姓名" width="120"></el-table-column>
         <el-table-column prop="stuLevel" label="优先级" width="120"></el-table-column>
         <el-table-column prop="trackCount" label="跟踪次数" width="120"></el-table-column>
         <el-table-column prop="stuPhoneNum" label="手机号" width="120"></el-table-column>
