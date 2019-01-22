@@ -2,8 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ss.dao.TrackMapper">
     <!--查询跟踪信息-->
-
-    <!--<cache-ref namespace="com.ss.dao.TrackMapper"/>-->
     <select id="getTrackInfo" resultMap="trackResultMap">
         select DISTINCT
         <include refid="trackColumns"/>,
@@ -41,7 +39,7 @@
     SELECT count(track_status) FROM t_track WHERE YEARWEEK(date_format(update_time,'%Y-%m-%d')) = YEARWEEK(now()) and track_status between 7 and 8
     </select>
 
-    <resultMap id="trackResultMap" type="track" autoMapping="true">
+    <resultMap id="trackResultMap" type="com.ss.entity.Track" autoMapping="true">
         <association property="stuNumber" column="stu_number" select="com.ss.dao.StuMapper.getStuInfoByStuNumber">
         </association>
         <association property="consultId" column="consult_id" select="com.ss.dao.UserMapper.getUserNameByUserId">

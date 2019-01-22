@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ss.dao.StuMapper">
-
-    <!--<cache-ref namespace="com.ss.dao.StuMapper"/>-->
     <!--添加简历数据-->
     <insert id="insertStuResume">
         insert into t_student
@@ -92,7 +90,7 @@
         where stu_number = #{stuNumber}
     </update>
 
-    <resultMap id="stuResultMap" type="student" autoMapping="true">
+    <resultMap id="stuResultMap" type="com.ss.entity.Student" autoMapping="true">
         <association property="consultId" column="consult_id" select="com.ss.dao.UserMapper.getUserNameByUserId">
         </association>
         <association property="teacherId" column="teacher_id" select="com.ss.dao.UserMapper.getUserNameByUserId">

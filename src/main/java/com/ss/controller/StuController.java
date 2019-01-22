@@ -1,7 +1,9 @@
 package com.ss.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.ss.entity.StudentInfo;
 import com.ss.service.StuInfoService;
+import com.ss.vo.Json;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -35,9 +37,11 @@ public class StuController {
      */
     @CrossOrigin
     @ResponseBody
-    @RequestMapping(value = "/getStu", produces = "application/json;charset=UTF-8")
-    public StudentInfo getStuInfo(@RequestParam("stuNumber") String stuNumber) {
-        return ss.getStuInfo(stuNumber);
+    @RequestMapping(value = "/getStu")
+    public Json getStuInfo(@RequestParam("stuNumber") String stuNumber) {
+        String oper = "get student basicInfo";
+        StudentInfo stuInfo = ss.getStuInfo(stuNumber);
+        return Json.succ(oper).data("info",stuInfo);
     }
 
     /**
@@ -46,8 +50,6 @@ public class StuController {
      * @param stu 学生数据
      * @return 是否修改成功
      */
-    @CrossOrigin
-    @ResponseBody
     @PostMapping(value = "/updateStu")
     public Boolean updateStuInfo(@RequestBody StudentInfo stu) {
         System.out.println("-----------修改数据---------");

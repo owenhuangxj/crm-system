@@ -192,7 +192,9 @@
       // 双击行执行的函数
       rowClick(column) {
         console.log(column);
-        alert("行的双击事件：" + column.stuName);
+        const stu = column.stuName;
+        alert("行的双击事件：" + stu);
+        // this.$router.push({path:'stutraceinfo',params:{stu}})
       },
       // 单独选择一行或多行（未点全选的情况）
       selectionChange(val){
