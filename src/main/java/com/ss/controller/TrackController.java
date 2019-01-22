@@ -1,8 +1,10 @@
 package com.ss.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.ss.entity.TrackInfo;
 import com.ss.service.TrackInfoService;
 import com.ss.util.DateUtil;
+import com.ss.vo.Json;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -20,15 +22,15 @@ public class TrackController {
 
     /**
      * 查询跟踪信息
-     *
      * @param stuNumber
      * @return 页面集合
      */
-    @CrossOrigin
     @ResponseBody
-    @RequestMapping(value = "/getTrack", produces = "application/json;charset=UTF-8")
-    public List<TrackInfo> getTrackInfo(@RequestParam("stuNumber") String stuNumber) {
-        return tis.getTrackInfo(stuNumber);
+    @RequestMapping(value = "/getTrack")
+    public Json getTrackInfo(@RequestParam("stuNumber") String stuNumber) {
+        String oper = "get track info";
+        List<TrackInfo> trackInfo = tis.getTrackInfo(stuNumber);
+        return Json.succ(oper).data("trckInfo",trackInfo);
     }
 
     /**

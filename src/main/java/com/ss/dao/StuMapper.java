@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 
 @Mapper
 @CacheNamespace(implementation = RedisCacheMybatis.class)
+
 public interface StuMapper {
 
     /**
