@@ -84,33 +84,37 @@ export const asyncRouterMap = [
         meta: { perm: 'm:sys:perm', title: '权限管理', icon: 'chart', noCache: true }
 
       },
+      {
+        path: 'log',
+        name: 'log',
+        component: _import('_system/log'),
+        meta: { perm: 'm:sys:perm', title: '操作日志', icon: 'chart', noCache: true }
+      },
     ]
   },
   {
-    path: '/menu1',
+    path: '/person_message',
     component: Layout,
     children: [{
-      path: 'index',
-      name: 'menu1',
-      component: _import('menu/menu1'),
-      meta: { perm:'m:menu1', title: '菜单1', icon: 'icon' }
+      path: 'person_message',
+      name: '消息',
+      component: _import('menu/user/message'),
+      meta: { perm:'m:user:message', title: '个人消息', icon: 'icon' }
     }]
   },
-
-
-  {
-    path: '/menu2',
+  /*{
+    path: '/employee',
     component: Layout,
     children: [{
-      path: 'index',
-      name: 'menu2',
+      path: 'employee',
+      name: 'employee',
       component: _import('menu/menu2'),
-      meta: { perm:'m:menu2', title: '菜单2', icon: 'icon' }
+      meta: { perm:'m:employee:management', title: '员工管理', icon: 'icon' }
     }]
-  },
+  },*/
 
   {
-    path: '/menu3',
+    path: '/stumanage',
     component: Layout,
     meta: {
       perm:'m:menu3',
@@ -118,14 +122,13 @@ export const asyncRouterMap = [
       icon: 'chart'
     },
     children: [
-      { path: 'menu3_1', component: _import('menu/menu3_1'), name: 'menu3_1', meta: { perm:'m:menu3:1', title: '学员跟踪', icon: 'chart', noCache: true }},
-      { path: 'menu3_2', component: _import('menu/menu3_2'), name: 'menu3_2', meta: { perm:'m:menu3:2', title: '未分配简历', icon: 'chart', noCache: true }},
-      { path: 'menu3_3', component: _import('menu/menu3_3'), name: 'menu3_3', meta: { perm:'m:menu3:3', title: '定时任务', icon: 'chart', noCache: true }}
+      { path: 'stutrace', component: _import('menu/student/trace'), name: 'stutrace', meta: { perm:'m:student:trace', title: '学员跟踪', icon: 'chart', noCache: true }},
+      { path: 'allot', component: _import('menu/student/allot'), name: 'allot', meta: { perm:'m:student:allot', title: '简历分配', icon: 'chart', noCache: true }},
     ]
   },
 
 
-  {
+  /*{
     path: '/menu4',
     name: 'menu4',
     component: Layout,
@@ -154,7 +157,7 @@ export const asyncRouterMap = [
       },
       { path: 'menu4/menu4_2', name: 'menu4_2', icon: 'tab', component: _import('menu/menu4_2/index'), meta: {perm:'m:menu4:2', title: '菜单4-2' }}
     ]
-  },
+  },*/
 
   { path: '*', redirect: '/404', hidden: true }
 ]
