@@ -82,7 +82,6 @@ export const asyncRouterMap = [
         name: 'perm_manage',
         component: _import('_system/perm/index'),
         meta: { perm: 'm:sys:perm', title: '权限管理', icon: 'chart', noCache: true }
-
       },
       {
         path: 'log',
@@ -102,16 +101,16 @@ export const asyncRouterMap = [
       meta: { perm:'m:user:message', title: '个人消息', icon: 'icon' }
     }]
   },
-  /*{
+  {
     path: '/employee',
     component: Layout,
     children: [{
       path: 'employee',
       name: 'employee',
-      component: _import('menu/menu2'),
-      meta: { perm:'m:employee:management', title: '员工管理', icon: 'icon' }
+      component: _import('menu/employee/schedule'),
+      meta: { perm:'m:employee:management', title: '工作进度', icon: 'icon' }
     }]
-  },*/
+  },
 
   {
     path: '/stumanage',
