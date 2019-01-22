@@ -120,6 +120,8 @@ export const asyncRouterMap = [
       title: '学员管理',
       icon: 'chart'
     },
+
+
     children: [
       { path: 'stutrace', component: _import('menu/student/trace'), name: 'stutrace', meta: { perm:'m:student:trace', title: '学员跟踪', icon: 'chart', noCache: true }},
       { path: 'allot', component: _import('menu/student/allot'), name: 'allot', meta: { perm:'m:student:allot', title: '简历分配', icon: 'chart', noCache: true }},
