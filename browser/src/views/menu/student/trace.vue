@@ -25,7 +25,6 @@
           <el-button type="primary" @click="doConfirm">确 定</el-button>
         </div>
       </el-dialog>
-
       <!--弹出“导入简历”的对话框-->
       <el-dialog title="导入简历" :visible.sync="resoumeFormVisible" center :append-to-body='true' :lock-scroll="false" width="45%">
         <span>选择导入模板</span>
