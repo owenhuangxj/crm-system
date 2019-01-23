@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ss.dao.ResumeAllotMapper">
+
+<!--    <foreach item="value" index="key" collection="map.entrySet()" separator=";" >
+        UPDATE t_student SET   consult_id=#{value}
+        WHERE stu_id = #{key}
+    </foreach>-->
+
+
+        <update id="updateBatch" parameterType="java.util.Map">
+            UPDATE t_student SET
+            <trim prefix="consult_id =(case" suffix="end)">
+                <foreach item="value" index="key" collection="map.entrySet()">
+                    WHEN stu_id=#{key} THEN #{value}
+                </foreach>
+            </trim>
+            ,stu_status=1
+            where stu_id in(
+            <foreach collection="map.entrySet()" separator="," item="item" index="key">
+                ${key}
+            </foreach>
+            )
+
+
+
+
+        </update>
+
+
+
+    <!--load  data  local infile 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/test.csv'-->
+    <!--into table t_user fields terminated by','-->
+    <!--lines terminated by'\n'(user_id,user_name,password);-->
+    <!--9,10,11,13,22,35,39,41,43,52-->
+ <!--   "姓名","性别","手机","出生日期","家庭地址","职能/职位","自我评价","工作经验","项目经验","培训经历"-->
+    <!-- 将csv文件数据导入到考勤数据表 -->
+    <select id="ImportResume">
+load data infile #{src}
+into table t_student
+fields terminated by '|'
+lines terminated by '\r\n'(stu_name,stu_sex,stu_birth,stu_phone_num,stu_address,stu_wanted_position,stu_evaluation,stu_work,stu_project,stu_trained,stu_channel,stu_source);
+  </select>
+
+
+</mapper>
