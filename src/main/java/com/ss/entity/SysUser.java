@@ -29,6 +29,7 @@ public class SysUser extends Model<SysUser> {
     private Boolean locked;   // 是否锁定
     private Date created;   // 创建时间
     private Date updated;   // 修改时间
+    private String email;
 
     @TableField(exist = false)
     private List<SysRole> roleList = new ArrayList<>();    //用户所有角色值，在管理后台显示用户的角色
