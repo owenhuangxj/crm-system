@@ -57,8 +57,6 @@
 </template>
 
 <script>
- import {getAllUsers} from '@/api/allot'
-
   export default {
         data: function () {
             return {
