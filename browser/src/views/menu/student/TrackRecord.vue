@@ -33,7 +33,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="跟踪时间">
-                        <el-date-picker v-model="form.trackTime" type="datetime" ></el-date-picker>
+                        <el-date-picker v-model="form.trackTime" type="datetime" value-format="yyyy-MM-dd hh:mm:ss"></el-date-picker>
                     </el-form-item>
                 </div>
                 <div class="newTrackCss">
@@ -53,7 +53,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="下次跟踪时间">
-                        <el-date-picker v-model="form.nextTrackTime" type="datetime" ></el-date-picker>
+                        <el-date-picker v-model="form.nextTrackTime" type="datetime" value-format="yyyy-MM-dd hh:mm:ss"></el-date-picker>
                     </el-form-item>
                 </div>
                 <div class="newTrackCss">
@@ -71,10 +71,10 @@
                 </div>
                 <div class="newTrackCss">
                     <el-form-item label="预计上门">
-                        <el-date-picker v-model="form.predictTime" type="datetime" ></el-date-picker>
+                        <el-date-picker v-model="form.predictTime" type="datetime" value-format="yyyy-MM-dd hh:mm:ss"></el-date-picker>
                     </el-form-item>
                     <el-form-item label="预计成交">
-                        <el-date-picker v-model="form.predictTrade" type="datetime" ></el-date-picker>
+                        <el-date-picker v-model="form.predictTrade" type="datetime" value-format="yyyy-MM-dd hh:mm:ss"></el-date-picker>
                     </el-form-item>
                 </div>
                 <el-form-item label="跟踪内容">
@@ -91,6 +91,7 @@
 <script>
   import stuApi from '@/api/student'
   import user from '@/store/modules/user'
+  import {getNowDate} from '@/utils/dateTime'
   export default{
         // props:["stuNum"],
         data(){
@@ -109,14 +110,14 @@
                 }, ],
                 dialogFormVisible: false,
                 form:{
-                    trackMethod:"",
-                    trackTime:"",
-                    currentStatus:"",
-                    nextTrackTime:"",
+                    trackMethod:"QQ",
+                    trackTime:getNowDate(),
+                    currentStatus:"新增",
+                    nextTrackTime:getNowDate(),
                     trackDuration:"",
-                    priority:"",
-                    predictTime:"",
-                    predictTrade:"",
+                    priority:"无",
+                    predictTime:getNowDate(),
+                    predictTrade:getNowDate(),
                     trackDesc:"",
                     trailsman: user.state.uid,
                     stuNumber:"20191121870",
