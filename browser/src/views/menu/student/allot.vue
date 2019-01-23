@@ -11,7 +11,7 @@
 
     </div>
     <div id="table">
-      <el-table ref="multipleTable" :data="resumeData" tooltip-effect="dark"  :default-sort = "{prop: 'date', order: 'descending'}" @selection-change="handleSelectionChange">
+      <el-table ref="multipleTable" :data="resumeData" tooltip-effect="dark"  :default-sort = "{prop: 'date', order: 'descending'}"  @selection-change="selectionChange">
         <el-table-column type="expand">
           <template slot-scope="props">
             <el-form label-position="right" inline class="demo-table-expand">
@@ -24,7 +24,7 @@
         </el-table-column>
         <el-table-column type="selection"width="55"></el-table-column>
         <el-table-column label="序号" type="index" width="50"></el-table-column>
-        <el-table-column prop="stuNumber" label="姓名" width="120"></el-table-column>
+        <el-table-column prop="stuName" label="姓名" width="120"></el-table-column>
         <el-table-column prop="stuSex" label="性别" width="120"></el-table-column>
         <el-table-column prop="stuPhoneNum" label="电话" width="120"></el-table-column>
         <el-table-column prop="stuCreateTime" label="录入日期" width="120"></el-table-column>
@@ -50,7 +50,6 @@
     <el-dialog
       title="简历分配"
       :visible.sync="allotDialog"
-      width="80%"
       :before-close="handleClose">
       <ResumeAllot></ResumeAllot>
     </el-dialog>
@@ -58,7 +57,6 @@
       <el-dialog
         title="简历导入"
         :visible.sync="importDialog"
-        width="80%"
         :before-close="handleClose">
    <ResumeImport> </ResumeImport>
 
@@ -73,19 +71,21 @@
 <script>
   import  ResumeAllot  from './resume-allot.vue';
   import  ResumeImport  from './resume-import.vue';
-/*  import {getUnAllotResume} from  '@/api/allot';'*/
+  import allotApi from  '@/api/allot';
 
   let resumeData=[{
-    stuName: '',
-    stuNumber: '',
-    stuSex: '',
-    stuPhoneNum: '',
-    stuAddress: '',
-    stuSource: '',
-    stuWork: '',
-    stuProject: '',
-    stuTrained: '',
-  }];
+    stuName: '12',
+    stuNumber: '321',
+    stuSex: '321',
+    stuPhoneNum: '321',
+    stuAddress: '321',
+    stuCreateTime:"11",
+    stuSource: '21321',
+    stuWork: '321',
+    stuProject: '123',
+    stuTrained: '123',
+  }
+  ];
 
   let totalData=1;
 
@@ -97,13 +97,14 @@
 
     data() {
       return {
-        resumeData: resumeData,
+        resumeData: null,
         multipleSelection: [],
         currentPage: 0,
         totalData:totalData,
         allotDialog: false,
         importDialog: false,
         newDialog:false,
+        selectedId:null,
       }
     },
     created() {
@@ -128,13 +129,14 @@
     methods:{
       //获得初始化数据
       getData(){
- /*       axios.get('/getUnAllotResume').then((res) => {
-          console.log(res.data);
-          this.resumeData=res.data.value.records;
+        allotApi.getUnAllotResume().then(response => {
+          this.resumeData = response.data.data.records;
+          /*this.resumeData=res.data.value.records;
           this.curentPage=res.data.value.current;
-          this.totalData=res.data.value.total;
-        })*/
+          this.totalData=res.data.value.total;*/
+        })
       },
+      /**打开对话框*/
       dialog(index){
         switch (index) {
           case 0: this.newDialog=true;
@@ -143,19 +145,27 @@
           break;
           case 2: this.allotDialog=true;
           break;
-
         }
-
+        this.getSelectedId()
       },
       handleClick(row) {
-
         alert("查看的内容"+JSON.stringify(row))
         console.log(row);
-
       },
       search() {
         this.is_search = true;
         alert("搜索的内容："+this.select_cate+":"+this.select_word+"start:"+this.value1+"end:"+this.value2);
+      },
+      selectionChange(val){
+        this.multipleSelection = val
+      },
+      getSelectedId(){
+        let selectedId=new Array() ;
+
+      for (let item of this.multipleSelection){
+      selectedId.push(item.stuNumber);
+      }
+        this.selectedId=selectedId;
       },
       doubleclick(index){
         alert("你好我是双击事件"+JSON.stringify(index) )
@@ -166,6 +176,14 @@
       handleNextPage(val){
         console(`下页 ${val} 条`);
       },
+      handleClose(done) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            done();
+          })
+          .catch(_ => {
+          });
+      },
       handleSizeChange(val) {
         this.cur_page_size=val;
         this.getData();
@@ -175,9 +193,6 @@
         this.cur_page=val;
         this.getData();
         console.log(`当前页: ${curretnPage}`);
-      },
-      handleSelectionChange(){
-        console("我改变了");
       },
       formatter(row, column) {
         return row.address;
@@ -191,13 +206,27 @@
           this.$refs.multipleTable.clearSelection();
         }
       },
-      handleSelectionChange(val) {
-        /* this.multipleSelection = val;*/
-      },
+
       filterHandler(value, row, column) {
         const property = column['property'];
         return row[property] === value;
       }
+    },
+    /*监控函数*/
+    watch: {
+      resumeData: {
+        deep: true,
+        handler: function (newVal, oldVal) {
+          console.log('resumeData new:', newVal, 'old:', oldVal);
+        },
+      },
+      selectedId:{
+        deep: true,
+        handler: function (newVal, oldVal) {
+          console.log('selectedId new:', newVal, 'old:', oldVal);
+        },
+      },
+
     }
 
 

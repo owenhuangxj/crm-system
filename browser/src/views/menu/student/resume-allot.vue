@@ -3,22 +3,15 @@
     <div id="resumeAllot">
 
 
-
-        <div id="dialog-main">
-            <div id="msgTab" ref="msgTab">
-                <a @click="tabSwitch(index)"
-                   v-for="(item,index) in tabs"
-                   :class="{active : index===curId}"
-                >{{item.name}}</a>
+            <div id="tab_title" >
+              <a @click="tabSwitch(0)">固定分配</a><a @click="tabSwitch(1)">随机分配</a>
             </div>
             <!--横线--> <!--滑动条-->
-            <div id="tabScroll" class="split">
-                <div ref="smallScroll" class="smallScroll"></div>
-            </div>
+            <div id="tabScroll" class="split"><div  id="scrollBlock"></div></div>
             <!--人员选择-->
-            <div id="tab-emp">
-                <span>人员：</span>
-                <el-select v-model="employeeSelect" multiple placeholder="请选择">
+            <div id="tab-emp" class="context">
+                <span>人&emsp;&ensp;员:</span>
+                <el-select   class="allot_input" v-model="employeeSelect" multiple placeholder="请选择">
                     <el-option
                             v-for="item in employees"
                             :key="item.value"
@@ -26,37 +19,37 @@
                             :value="item.value">
                     </el-option>
                 </el-select>
+                </div>
+                  <div id="allot_num" class="context">
+                    <span>分配数量:</span>
+                    <el-input-number  class="allot_input"  v-model="num" :step="3" :min="1" :max="100" label="描述文字"></el-input-number>
+                  </div>
 
-                <div id="allot-time">
-                    <span>分配数量</span>
-                    <el-input-number v-model="num" :step="3" :min="1" :max="100" label="描述文字"></el-input-number>
-                </div>
-                <div>
-                    <div id="allot_time">
-                        <span>分配时间：</span>
-                        <el-radio v-model="radio" label="1" @change="hideTimePicker()">立刻发送</el-radio>
-                        <el-radio v-model="radio" label="2" @change="showTimePicker()">选择时间</el-radio>
-                        <br/>
-                        <div id="timePicker">
-                            <el-date-picker size=="mini" v-model="dateDefault" type="datetime" placeholder="选择任务时间" align="right" :picker-options="timePicker"></el-date-picker>
-                        </div>
-                    </div>
-                </div>
+             <div id="allot_time" class="context">
+            <span>分配时间：</span>
+            <el-radio v-model="radio" label="1" @change="hideTimePicker()">立刻发送</el-radio>
+            <el-radio v-model="radio" label="2" @change="showTimePicker()">选择时间</el-radio>
+            <br/>
+            <div id="timePicker" class="context">
+                 <el-date-picker  class="allot_input" v-model="dateDefault" type="datetime" placeholder="选择任务时间" align="right" :picker-options="timePicker"></el-date-picker>
             </div>
-        </div>
-
-        <span slot="footer" class="dialog-footer">
-    <el-button @click="dialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-  </span>
+          </div>
 
 
-    </div>
+      <div id="tab-button">
+        <div class="split"/>
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+      </div>
 
+
+</div>
 
 </template>
 
 <script>
+  import allotApi from  '@/api/allot';
+
   export default {
         data: function () {
             return {
@@ -91,18 +84,12 @@
                 },
                 radio: 'allotTime',
                 dateDefault: '',
-                curId: 0,
                 // 标签名
                 title: "简历分配",
                 //数字框每次增量
                 val: 5,
                 //初始量
                 num: 5,
-                tabs: [
-                    {name: '固定分配'},
-                    {name: '随机分配'},
-
-                ],
                 /*下拉框中员工*/
                 employees: [],
                 employeeSelect: [],
@@ -115,44 +102,36 @@
             data() {
                 alert("computed方法执行")
             },
-            tableData: function () {
-                var _search = this.select_word;
-                if (_search) {
-                    return this.tableData.filter(function (product) {
-                        return Object.keys(product).some(function (key) {
-                            return String(product[key]).toLowerCase().indexOf(_search) > -1
-                        })
-                    })
-                }
-                return this.tableData;
-            }
+
         },
         mounted: function () {
             console.log("mounted执行");
-           getAllUsers().then(response => {
-              this.employees = response.data;
-              console.log(response.data);
-            })
+         allotApi.getAllUsers().then(response => {
+            this.employees = response.data;
+            console.log(response.data);
+          })
         },
         methods: {
             //选项卡变化
             tabSwitch(index) {
-                this.curId = index;
-                console.log(index)
-                setTimeout(tabScrollMove, 10, this);
+              switch (index){
+                case 0:
+                  document.getElementById("allot_num").style.display = "none";
+                  document.getElementById("scrollBlock").style.marginLeft="0em";
+                  break;
+                case 1:
+                  document.getElementById("allot_num").style.display = "block";
+                  document.getElementById("scrollBlock").style.marginLeft="6.5em";
+                  break;
+              }
                 console.log('执行Tab');
             },
+
             showTimePicker() {
                 document.getElementById("timePicker").style.display = "block";
             },
             hideTimePicker() {
                 document.getElementById("timePicker").style.display = "none";
-            },
-            fixAllot() {
-
-            },
-            randomAllot() {
-
             },
             handleClose(done) {
                 this.$confirm('确认关闭？')
@@ -171,27 +150,9 @@
                     console.log('new:', newVal, 'old:', oldVal);
                 },
             },
-                curId: {
-                    deep: true,
-                    handler: function (newVal, oldVal) {
-
-                        if(0==newVal){
-
-                            document.getElementById("allotNum").style.display = "none";
-                        }else{
-                            document.getElementById("allotNum").style.display = "block";
-                        }
-
-                        console.log('new:', newVal, 'old:', oldVal);
-                    }
-                }
             }
 
 
-    }
-
-    function tabScrollMove(obj) {
-        obj.$refs.smallScroll.style.left = document.getElementsByClassName("active")[0].offsetLeft + 'px';
     }
 
 
@@ -199,24 +160,41 @@
 
 <style scoped>
 
-    #dialog-main {
-        padding-left: 2em;
-        padding-right: 2em;
-    }
-
     #resumeAllot {
-        padding: 30px;
         background: #fff;
         border: 1px solid #ddd;
         border-radius: 5px;
-        height: 500px;
+      padding-left: 2em;
+      padding-right: 2em;
+    }
+    .context{
+      padding-top: 0.5em;
+      padding-bottom: 0.5em;
+
+    }
+    .context span{
+      padding-right: 0.8em;
+
     }
 
-    #msgTab {
+
+
+    #tab_title {
         height: 50px;
-
     }
-    #allotNum{
+    #tab_title > a {
+      float: left;
+      padding-right: 40px;
+      height: 70px;
+      line-height: 70px;
+      font-size: 14px;
+    }
+
+    #tab_title > a:hover {
+      color: #409eff;
+    }
+
+    #allot_num{
         display: none;
     }
 
@@ -224,22 +202,13 @@
         display: none;
     }
 
+
     a {
         color: #000;
         text-decoration: none;
     }
 
-    #msgTab > a {
-        float: left;
-        padding-right: 40px;
-        height: 70px;
-        line-height: 70px;
-        font-size: 14px;
-    }
 
-    #msgTab > a:hover {
-        color: #409eff;
-    }
 
     /*分割线*/
     .split {
@@ -249,10 +218,7 @@
         height: 0.2rem;
     }
 
-    .smallScroll {
-        /*左右位置过渡*/
-        transition: left .4s;
-        position: absolute;
+    #scrollBlock {
         width: 4rem;
         height: 0.2rem;
         background-color: #409eff;
