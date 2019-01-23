@@ -74,7 +74,8 @@
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column type="index" label="编号" width="55"></el-table-column>
         <el-table-column prop="flag" label="状态标识" width="120"></el-table-column>
-        <el-table-column prop="stuName" label="姓名" width="120"></el-table-column>
+        <el-table-column prop="stuNumber" label="学员编号" width="120"></el-table-column>
+        <el-table-column prop="stuName" label="学员姓名" width="120"></el-table-column>
         <el-table-column prop="stuLevel" label="优先级" width="120"></el-table-column>
         <el-table-column prop="trackCount" label="跟踪次数" width="120"></el-table-column>
         <el-table-column prop="stuPhoneNum" label="手机号" width="120"></el-table-column>
@@ -104,11 +105,16 @@
 </template>
 
 <script>
-  // import ElTableHeader from "element-ui";
-  // import ElTableFilterPanel from "element-ui/packages/table/src/filter-panel";
+  import traceApi from '@/api/trace'
 
-  module.exports = {
-    // components: {ElTableFilterPanel, ElTableHeader},
+  let data = {
+    pageSize: this.pageSize,
+    pageNum : this.pageNum,
+    value   : this.value,
+    input   : this.input
+  };
+
+  export default {
     data() {
       return {
         tableData: [], // 后台传入的数据
@@ -149,19 +155,16 @@
     methods: {
       // 发送请求，获取相应的数据
       getNewsList() {
-        axios({
-          url: "/getTrackList",
-          method: "post",
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          data: this.pagingData()
-        }).then(res => {
+        traceApi.queryTraceInfo(
+          // this.pagingData()
+          data
+        ).then(res => {
           this.tableData = res.data.rows;
           this.total = res.data.total;
+          alert("返回成功：" + res.data.rows);
           console.log("返回成功：" + res)
-        }).catch(err => {
-          this.$message({ // 提示框
+        }).catch(err => {  // 警告框
+          this.$message({
             type: 'warning',
             message: '系统内部错误！请联系管理员。错误代码：' + err
           });
@@ -247,15 +250,6 @@
       // 提交
       submitUpload(){
         this.$refs.upload.submit();
-        /*this.$axios({
-          url: '/uploadFiles',
-          data: ''
-        }).then(res => function () {
-          this.$message({
-            message: res,
-            type: 'info'
-          });
-        })*/
       },
       // 上传文件的判断
       beforeAvatarUpload(file){
@@ -323,6 +317,7 @@
 
   #stuInfo, .el_bt {
     font-family: Microsoft YaHei;
+    padding: 10px;
   }
 
   #search {

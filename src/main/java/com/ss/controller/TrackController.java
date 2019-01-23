@@ -1,9 +1,11 @@
 package com.ss.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.ss.entity.TrackInfo;
+import com.ss.entity.TrackModel;
 import com.ss.service.TrackInfoService;
+import com.ss.service.TrackModelService;
 import com.ss.util.DateUtil;
+import com.ss.util.PageData;
 import com.ss.vo.Json;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,8 +19,8 @@ public class TrackController {
 
     @Autowired
     private TrackInfoService tis;
-// @Autowired
-//    private TrackModelService tms;
+    @Autowired
+    private TrackModelService tms;
 
     /**
      * 查询跟踪信息
@@ -51,24 +53,20 @@ public class TrackController {
         return tis.addTrackInfoRecord(ti);
     }
 
-    @GetMapping("/tailAfter")
-    public String track() {
-        return "trackTable";
-    }
 
-//    @PostMapping(value = "/getTrackList", produces = "application/json;charset=UTF-8")
-//    @ResponseBody
-//    public PageData<TrackModel> getTrackList(
-//            @RequestParam("pageSize") Integer pageSize,
-//            @RequestParam("pageNum") Integer pageNum,
-//            @RequestParam("input") String input,
-//            @RequestParam("value") String value) {
-////        System.out.println("进getTrackList的参数：" + input + "，" + value + "，" + pageNum + "，" + pageSize);
-//        String inp = "".equals(input) ? null : input;
-//        PageData<TrackModel> trackModel = tms.getTrackModel(inp, value, pageNum, pageSize);
-////        System.out.println("返回的集合：" + trackModel);
-//        return trackModel;
-//    }
+    @PostMapping(value = "/getTraceList", produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public PageData<TrackModel> getTraceList(
+            @RequestParam("pageSize") Integer pageSize,
+            @RequestParam("pageNum") Integer pageNum,
+            @RequestParam("input") String input,
+            @RequestParam("value") String value) {
+        System.out.println("进getTrackList的参数：" + input + "，" + value + "，" + pageNum + "，" + pageSize);
+        String inp = "".equals(input) ? null : input;
+        PageData<TrackModel> trackModel = tms.getTrackModel(inp, value, pageNum, pageSize);
+        System.out.println("返回的集合：" + trackModel);
+        return trackModel;
+    }
 
 
 }
