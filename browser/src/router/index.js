@@ -43,6 +43,11 @@ export const constantRouterMap = [
       meta: { title: '首页', icon: 'dashboard', noCache: true }
     }]
   },
+  {
+      path: '/register',
+      component: _import('register/register'),
+      hidden: true
+  },
 ]
 
 export default new Router({
