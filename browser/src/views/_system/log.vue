@@ -58,11 +58,11 @@
         width="250">
       </el-table-column>
       <el-table-column
-        prop="userId"
+        prop="uid"
         label="用户账号">
       </el-table-column>
       <el-table-column
-        prop="userName"
+        prop="nick"
         label="用户名">
       </el-table-column>
       <el-table-column
@@ -123,8 +123,8 @@
           logType:'',
           logErrorCode: '',
           logContent:'',
-          userId:'',
-          userName: '',
+          uid:'',
+          nick: '',
           logDate: '',
         }],
         currentPage4: 1,//默认从第几页开始
@@ -148,7 +148,7 @@
         })
         /*页面加载的数据*/
         logApi.selectLog(this.cur_page,this.cur_page_size) .then((res) => {
-          /*alert(JSON.stringify(res.data))*/
+         /* alert(JSON.stringify(res.data))*/
           this.tableData = res.data.data
         })
 
