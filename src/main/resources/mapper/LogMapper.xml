@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ss.dao.LogMapper">
+    <!--添加日志-->
+    <insert id="getInsertLog">
+        insert into T_LOG
+        (log_id,log_type,log_error_code,log_content,uid,log_date)
+        values
+        (<include refid="logValues"/>)
+    </insert>
+
+    <!--查询所有日志-->
+    <select id="getSelectLog" resultMap="logResultMap">
+         select t.log_id,t.log_type,log_error_code,t.log_content,t.uid,t.log_date,s.nick
+         from T_LOG t,sys_user s where s.uid=t.uid limit #{currentPage},#{currentPageSize}
+    </select>
+
+    <!--根据条件查找日志-->
+    <select id="getAsyncSelectLog" resultMap="logResultMap">
+        select t.log_id,t.log_type,log_error_code,t.log_content,t.uid,t.log_date,s.nick
+        from T_LOG t,sys_user s where s.uid=t.uid
+        <where>
+            <if test="logType!=null and logType!=''">
+                and log_type=#{logType}
+            </if>
+            <if test="email!=null and email!=''">
+                and email = #{email}
+            </if>
+            <if test="nick!=null and nick!=''">
+                and nick like concat('%',#{nick},'%')
+            </if>
+        <if test="startTime!=null and startTime!=''">
+            AND log_date &gt;= '${startTime}'
+        </if>
+        <if test="endTime!=null and endTime!=''">
+            AND log_date &lt;= '${endTime}'
+        </if>
+        </where>
+        limit #{currentPage},#{currentPageSize}
+    </select>
+
+    <!--分页查询日志的总条数-->
+    <select id="selectLogNum" resultType="Integer">
+      select count(*) from T_LOG
+    </select>
+
+
+    <resultMap type="Log" id="logResultMap" autoMapping="true">
+    </resultMap>
+
+
+    <sql id="logValues">#{logId},#{logType},#{logErrorCode},#{logContent},#{uId},#{logDate}
+    </sql>
+</mapper>
