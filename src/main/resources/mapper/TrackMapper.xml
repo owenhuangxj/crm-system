@@ -42,14 +42,14 @@
     <resultMap id="trackResultMap" type="com.ss.entity.Track" autoMapping="true">
         <association property="stuNumber" column="stu_number" select="com.ss.dao.StuMapper.getStuInfoByStuNumber">
         </association>
-        <association property="consultId" column="consult_id" select="com.ss.dao.UserMapper.getUserNameByUserId">
+        <association property="consultId" column="consult_id" select="com.ss.dao.UserMapper.getUserByUid">
         </association>
-        <association property="teacherId" column="teacher_id" select="com.ss.dao.UserMapper.getUserNameByUserId">
+        <association property="teacherId" column="teacher_id" select="com.ss.dao.UserMapper.getUserByUid">
         </association>
     </resultMap>
 
     <sql id="trackColumns">track_ways,track_priority,track_time,track_status,track_next_time,track_duration,track_predict_time,track_turnover_time,track_importance,track_valid,track_details
     </sql>
-    <sql id="trackValues">#{trackWays},#{trackPriority},#{trackTime},#{trackStatus},#{trackNextTime},#{trackDuration},#{trackPredictTime},#{trackTurnoverTime},#{trackImportance},#{trackValid},#{trackDetails},#{stuNumber.stuNumber},#{consultId.userId},#{teacherId.userId}
+    <sql id="trackValues">#{trackWays},#{trackPriority},#{trackTime},#{trackStatus},#{trackNextTime},#{trackDuration},#{trackPredictTime},#{trackTurnoverTime},#{trackImportance},#{trackValid},#{trackDetails},#{stuNumber.stuNumber},#{consultId.uid},#{teacherId.uid}
     </sql>
 </mapper>

@@ -20,6 +20,7 @@ export default {
     return request({
       url:'stu/updateStu',
       method:'post',
+      headers:{"Content-Type":"application/json;charset=UTF-8"},
       data
     })
   },
@@ -28,8 +29,9 @@ export default {
    */
   addStuInfo(data){
     return request({
-      url:'',
+      url:'stu/addStu',
       method:'post',
+      headers:{"Content-Type":"application/json;charset=UTF-8"},
       data
     })
   },
@@ -47,8 +49,9 @@ export default {
    */
   addNewTrackInfo(data){
     return request({
-      url:'tack/addTracrk',
+      url:'track/addTrack',
       method:'post',
+      headers:{"Content-Type":"application/json;charset=UTF-8"},
       data
     })
   }

@@ -8,7 +8,6 @@ import com.ss.service.TrackInfoService;
 import com.ss.service.TrackService;
 import com.ss.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.cache.RedisCache;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,13 +19,9 @@ public class TrackInfoServiceImpl implements TrackInfoService {
     private User user = new User();
     @Autowired
     private TrackService ts;
-//    @Autowired
-//    private RedisCache<TrackInfo> cache;
 
     @Override
     public boolean addTrackInfoRecord(TrackInfo ti) {
-//        cache.addCache("track" + ti.getStuNumber(), ti);
-        // 学生编号
         Student stu = new Student();
         stu.setStuNumber(ti.getStuNumber());
         // 获取当前时间
@@ -39,28 +34,21 @@ public class TrackInfoServiceImpl implements TrackInfoService {
     @Override
     public List<TrackInfo> getTrackInfo(String stuNumber) {
         List<TrackInfo> trackInfos = null;
-        // 判断Redis中有没有数据
-//        if (cache.getCache("track" + stuNumber).size() > 0) {
-//            return cache.getCache("track" + stuNumber);
-//        } else {
-            // 获取跟踪数据
-            List<Track> tracks = ts.getTrackInfo(stuNumber);
-            // 创建页面跟踪对象集合
-            trackInfos = new ArrayList<TrackInfo>();
-            // 没有数据数据时，返回null
-            if (tracks.size() == 0)
-                return trackInfos;
-            // 创建页面跟踪对象
-            TrackInfo trackInfo = null;
-            // 循环遍历
-            for (Track track : tracks) {
-                trackInfo = new TrackInfo(track.getTrackWays(), track.getTrackPriority(), track.getTrackTime(), track.getTrackStatus(), track.getTrackNextTime(), track.getTrackDuration(), track.getTrackPredictTime(), track.getTrackTurnoverTime(), null, null, track.getTrackDetails(), track.getStuNumber().getStuNumber(), getConsultId(track).getUserName(), getTeacherId(track).getUserName());
-                trackInfos.add(trackInfo);
-                // 添加缓存
-//                cache.addCache("track" + stuNumber, trackInfo);
-            }
-            System.out.println(trackInfos);
-//        }
+        // 获取跟踪数据
+        List<Track> tracks = ts.getTrackInfo(stuNumber);
+        // 创建页面跟踪对象集合
+        trackInfos = new ArrayList<TrackInfo>();
+        // 没有数据数据时，返回null
+        if (tracks.size() == 0)
+            return trackInfos;
+        // 创建页面跟踪对象
+        TrackInfo trackInfo = null;
+        // 循环遍历
+        for (Track track : tracks) {
+            trackInfo = new TrackInfo(track.getTrackWays(), track.getTrackPriority(), track.getTrackTime(), track.getTrackStatus(), track.getTrackNextTime(), track.getTrackDuration(), track.getTrackPredictTime(), track.getTrackTurnoverTime(), null, null, track.getTrackDetails(), track.getStuNumber().getStuNumber(), getConsultId(track).getNick(), getTeacherId(track).getNick());
+            trackInfos.add(trackInfo);
+        }
+        System.out.println(trackInfos);
         return trackInfos;
     }
 
@@ -73,7 +61,7 @@ public class TrackInfoServiceImpl implements TrackInfoService {
     public User getConsultId(TrackInfo info) {
         // 咨询师
         if (null != info.getTrailsman()) {
-            user.setUserId(Integer.parseInt(info.getTrailsman()));
+            user.setUid(info.getTrailsman());
         }
         return user;
     }
@@ -87,7 +75,7 @@ public class TrackInfoServiceImpl implements TrackInfoService {
     public User getTeacherId(TrackInfo info) {
         // 面试官
         if (null != info.getTechnicalInterviewer()) {
-            user.setUserId(Integer.parseInt(info.getTechnicalInterviewer()));
+            user.setUid(info.getTechnicalInterviewer());
         }
         return user;
     }
@@ -101,7 +89,8 @@ public class TrackInfoServiceImpl implements TrackInfoService {
     public User getConsultId(Track track) {
         // 面试官
         if (null == track.getConsultId()) {
-            track.getConsultId().setUserName("无");
+            user.setNick("无");
+            track.setConsultId(user);
         }
         return track.getConsultId();
     }
@@ -115,7 +104,8 @@ public class TrackInfoServiceImpl implements TrackInfoService {
     public User getTeacherId(Track track) {
         // 面试官
         if (null == track.getTeacherId()) {
-            track.getTeacherId().setUserName("无");
+            user.setNick("无");
+            track.setTeacherId(user);
         }
         return track.getTeacherId();
     }

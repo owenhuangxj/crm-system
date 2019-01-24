@@ -17,8 +17,6 @@ public class TrackServiceImpl implements TrackService {
     private TrackMapper tm;
     @Autowired
     private StuService ss;
-//    @Autowired
-//    private RedisCache<TrackInfo> cache;
 
     @Override
     public boolean addTrackRecord(Track track) {
@@ -112,7 +110,6 @@ public class TrackServiceImpl implements TrackService {
 //                break;
 //        }
         if (tm.insertTrackRecord(track) > 0) {
-//            cache.delCache("track" + track.getStuNumber().getStuNumber());
             return updateStu(track);
         }
         return false;
