@@ -1,6 +1,7 @@
 package com.ss.dao;
 
 import com.ss.config.RedisCacheMybatis;
+import com.ss.entity.SysUser;
 import com.ss.entity.TrackModel;
 import org.apache.ibatis.annotations.CacheNamespace;
 import org.apache.ibatis.annotations.Mapper;
@@ -32,5 +33,15 @@ public interface TrackModelMapper {
     Integer getTotal(@Param("stuName") String stuName, @Param("userName") String userName,
                      @Param("trackWays") String trackWays);
 
+    /**
+     * 获取全部咨询师
+     * @return 咨询师对象的集合
+     */
+    List<SysUser> getUserNames();
 
+    /**
+     * 修改咨询师
+     * @return 受影响行数
+     */
+    Integer updateNick(@Param("nick") String nick, @Param("stuNumber") List<String> stuNumber);
 }

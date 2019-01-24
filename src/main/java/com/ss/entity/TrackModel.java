@@ -56,7 +56,7 @@ public class TrackModel implements Serializable {
     /**
      * 咨询师
      */
-    private String userName;
+    private String nick;
     /**
      * 更新时间
      */
@@ -93,7 +93,7 @@ public class TrackModel implements Serializable {
                 ", stuStatus=" + stuStatus +
                 ", trackNextTime='" + trackNextTime + '\'' +
                 ", trackWays='" + trackWays + '\'' +
-                ", userName='" + userName + '\'' +
+                ", nick='" + nick + '\'' +
                 ", updateTime='" + updateTime + '\'' +
                 ", trackPredictTime='" + trackPredictTime + '\'' +
                 '}';

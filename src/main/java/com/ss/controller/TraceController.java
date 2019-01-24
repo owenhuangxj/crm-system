@@ -1,14 +1,20 @@
 package com.ss.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.ss.entity.TrackModel;
 import com.ss.service.TrackModelService;
-import com.ss.util.PageData;
+import com.ss.vo.Json;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @ClassName TraceController
@@ -17,25 +23,49 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @Date 2019/1/23 15:20
  */
 @Controller
-@RequestMapping("/track")
+@RequestMapping("/trace")
 public class TraceController {
-
 
     @Autowired
     private TrackModelService tms;
 
-
-    @PostMapping(value = "/getTrackList", produces = "application/json;charset=UTF-8")
+    /**
+     * 多条件查询学员跟踪信息
+     *
+     * @param pageSize
+     * @param pageNum
+     * @param input
+     * @param value
+     * @return
+     */
+    @RequestMapping(value = "/getTraceList", produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public PageData<TrackModel> getTrackList(
-            @RequestParam("pageSize") Integer pageSize,
-            @RequestParam("pageNum") Integer pageNum,
-            @RequestParam("input") String input,
-            @RequestParam("value") String value) {
-        System.out.println("进getTrackList的参数：" + input + "，" + value + "，" + pageNum + "，" + pageSize);
+    public Json getTraceList(@RequestParam("pageSize") Integer pageSize, @RequestParam("pageNum") Integer pageNum,
+                             @RequestParam("input") String input, @RequestParam("value") String value) {
         String inp = "".equals(input) ? null : input;
-        PageData<TrackModel> trackModel = tms.getTrackModel(inp, value, pageNum, pageSize);
-        System.out.println("返回的集合：" + trackModel);
+        Json trackModel = tms.getTrackModel(inp, value, pageNum, pageSize);
+        System.out.println("返回的Json：" + trackModel);
         return trackModel;
     }
+
+    @RequestMapping(value = "/getUserNames", produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public Json getUserNames(){
+        Json userNames = tms.getUserNames();
+        System.out.println("userNames：" + userNames);
+        return userNames;
+    }
+
+    @RequestMapping("/updateNick")
+    @ResponseBody
+    public Json updateNick(HttpServletRequest req, @RequestBody String body) {
+        JSONObject obj = JSON.parseObject(body);
+        JSONArray trace = obj.getJSONArray("trace");
+        String nick = obj.getString("nick");
+        List<TrackModel> trackModel = trace.toJavaList(TrackModel.class);
+        System.out.println("nick：" + nick + "，track：" + trackModel);
+        Json json = tms.updateNick(nick, trackModel);
+        return json;
+    }
+
 }

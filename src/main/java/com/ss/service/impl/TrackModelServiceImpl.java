@@ -1,19 +1,22 @@
 package com.ss.service.impl;
 
-import com.ss.util.PageData;
+import com.ss.entity.Counselor;
+import com.ss.entity.SysUser;
 import com.ss.entity.TrackModel;
 import com.ss.dao.TrackMapper;
 import com.ss.dao.TrackModelMapper;
+import com.ss.entity.User;
 import com.ss.service.TrackModelService;
+import com.ss.vo.Json;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @ClassName TrackModelServiceImpl
- * @Description TODO
+ * @Description 查询跟踪信息的实现类
  * @Author Jack Hu
  * @Date 2019/1/18 11:16
  */
@@ -24,38 +27,61 @@ public class TrackModelServiceImpl implements TrackModelService {
     private TrackModelMapper tmm;
     @Autowired
     private TrackMapper tm;
-    @Autowired
-    private RedisTemplate redisTemplate;
 
     @Override
-    public PageData<TrackModel> getTrackModel(String input, String value, Integer pageNum, Integer pageSize) {
+    public Json getTrackModel(String input, String value, Integer pageNum, Integer pageSize) {
         Integer start = (pageNum - 1) * pageSize;
         List<TrackModel> track = null;
         Integer total = null;
         // 判断用户在下拉框选择的搜索类型
         if ("1".equals(value)) {
-            total = tmm.getTotal(input,null,null);
+            total = tmm.getTotal(input, null, null);
             track = tmm.getTrackModel(input, null, null, start, pageSize);
         } else if ("2".equals(value)) {
-            total = tmm.getTotal(null,input,null);
+            total = tmm.getTotal(null, input, null);
             track = tmm.getTrackModel(null, input, null, start, pageSize);
         } else {
-            total = tmm.getTotal(null,null,input);
+            total = tmm.getTotal(null, null, input);
             track = tmm.getTrackModel(null, null, input, start, pageSize);
         }
-        PageData<TrackModel> pageData = new PageData<>(switchStatus(track), total);
-        return pageData;
+        // 前端需要的指定格式
+        Json json = new Json(null, true, total, "查询成功！", switchStatus(track));
+        return json;
+    }
+
+    @Override
+    public Json getUserNames() {
+        List<SysUser> userNames = tmm.getUserNames();
+        List<Counselor> counselor = new ArrayList<>();
+        for (SysUser u : userNames) {
+            counselor.add(new Counselor(u.getNick(),u.getNick()));
+        }
+        Json json = new Json(null, true, 0, null, counselor);
+        return json;
+    }
+
+    @Override
+    public Json updateNick(String nick, List<TrackModel> trackModel) {
+        List<String> stuNumber = new ArrayList<>();
+        for (TrackModel tm : trackModel) {
+            stuNumber.add(tm.getStuNumber());
+        }
+        Integer rows = tmm.updateNick(nick, stuNumber);
+        String msg = rows > 0 ? "成功修改：" + rows + "行！" : "修改失败！请刷新后重试...";
+        Json json = new Json(null, true, rows, msg, null);
+        return json;
     }
 
     /**
-     * 转换学员跟踪信息状态
+     * 转换学员跟踪信息（将数字转换成汉子以便在前端上显示）
+     *
      * @param trackModels
      * @return
      */
-    public static List<TrackModel> switchStatus(List<TrackModel> trackModels){
+    public static List<TrackModel> switchStatus(List<TrackModel> trackModels) {
         for (TrackModel tm : trackModels) {
             // 转换学员优先级
-            switch (tm.getStuLevel()){
+            switch (tm.getStuLevel()) {
                 case "2":
                     tm.setStuLevel("低");
                     break;
@@ -112,7 +138,6 @@ public class TrackModelServiceImpl implements TrackModelService {
         }
         return trackModels;
     }
-
 
 
 }
