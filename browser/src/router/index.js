@@ -114,7 +114,31 @@ export const asyncRouterMap = [
       name: 'employee',
       component: _import('menu/employee/schedule'),
       meta: { perm:'m:employee:management', title: '工作进度', icon: 'icon' }
-    }]
+    },
+      {
+        path: 'workorTable',
+        name: 'workorTable',
+        component: _import('menu/employee/workorTable'),
+        meta: {perm: 'm:workorTable:management', title: '业务详情', icon: 'icon'},
+        hidden:true
+      }
+      ,
+      {
+        path: 'myChart',
+        name: 'myChart',
+        component: _import('menu/employee/myChart'),
+        meta: {perm: 'm:myChart:management', title: '跟踪详情', icon: 'icon'},
+        hidden:true
+      }
+      ,
+      {
+        path: 'genzongxiangqing',
+        name: 'genzongxiangqing',
+        component: _import('menu/employee/genzongxiangqing'),
+        meta: {perm: 'm:genzongxiangqing:management', title: '跟踪详情', icon: 'icon'},
+        hidden:true
+      }
+    ]
   },
 
   {
