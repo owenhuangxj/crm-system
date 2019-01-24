@@ -14,12 +14,10 @@ public interface UserMapper extends BaseMapper<User> {
 
     /**
      * 查询用户姓名
+     *
      * @param userId 用户id
      * @return 用户姓名
      */
-    User getUserNameByUserId(@Param("userId") int userId);
-
-
-    Integer updateByStatus(@Param("userName") String userName, @Param("status") int status);
+    User getUserByUid(@Param("userId") int userId);
 
 }

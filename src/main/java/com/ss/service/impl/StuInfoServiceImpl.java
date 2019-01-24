@@ -15,8 +15,6 @@ public class StuInfoServiceImpl implements StuInfoService {
     private User user = new User();
     @Autowired
     private StuService ss;
-//    @Autowired
-//    private RedisCache<StudentInfo> cache;
 
     @Override
     public Boolean addStuResume(StudentInfo info) {
@@ -25,25 +23,14 @@ public class StuInfoServiceImpl implements StuInfoService {
 
     @Override
     public StudentInfo getStuInfo(String stuNumber) {
-        StudentInfo stuInfo = null;
-//        if (cache.getCache("stu" + stuNumber).size() > 0) {
-//            return (StudentInfo) cache.getCache("stu"+stuNumber).get(0);
-//        } else {
         Student info = ss.getStuInfo(stuNumber);
-        stuInfo = new StudentInfo(info.getStuNumber(), info.getStuName(), info.getStuSex(), info.getStuImportance(), info.getStuPhoneNum(), info.getStuQq(), info.getStuLevel(), info.getStuAddress(), info.getStuChannel(), info.getStuSource(), info.getStuEvaluation(), info.getStuWork(), info.getStuProject(), info.getStuEducation(), info.getStuTrained(), info.getStuCredentials(), info.getStuPerformance(), getConsultId(info).getUserId(), getTeacherId(info).getUserId());
-        // 添加缓存
-//            cache.addCache("stu"+stuNumber,stuInfo);
+        StudentInfo stuInfo = new StudentInfo(info.getStuNumber(), info.getStuName(), info.getStuSex(), info.getStuImportance(), info.getStuPhoneNum(), info.getStuQq(), info.getStuLevel(), info.getStuAddress(), info.getStuChannel(), info.getStuSource(), info.getStuEvaluation(), info.getStuWork(), info.getStuProject(), info.getStuEducation(), info.getStuTrained(), info.getStuCredentials(), info.getStuPerformance(), getConsultId(info).getUid(), getTeacherId(info).getUid());
         return stuInfo;
-//        }
     }
 
     @Override
     public Integer updateStuInfo(StudentInfo info) {
-        Integer integer = ss.updateStuInfoByStuNumber(getStu(info));
-//        if (integer > 0) {
-//            cache.delCache("stu" + info.getStuNumber());
-//        }
-        return integer;
+        return ss.updateStuInfoByStuNumber(getStu(info));
     }
 
     /**
@@ -55,7 +42,7 @@ public class StuInfoServiceImpl implements StuInfoService {
     public User getConsultId(StudentInfo info) {
         // 咨询师
         if (null != info.getTeacherId()) {
-            user.setUserId(info.getConsultId());
+            user.setUid(info.getConsultId());
         }
         return user;
     }
@@ -69,7 +56,7 @@ public class StuInfoServiceImpl implements StuInfoService {
     public User getTeacherId(StudentInfo info) {
         // 面试官
         if (null != info.getTeacherId()) {
-            user.setUserId(info.getTeacherId());
+            user.setUid(info.getTeacherId());
         }
         return user;
     }
@@ -83,7 +70,7 @@ public class StuInfoServiceImpl implements StuInfoService {
     public User getConsultId(Student stu) {
         // 咨询师
         if (null == stu.getConsultId()) {
-            user.setUserId(0);
+            user.setUid("0");
             stu.setConsultId(user);
         }
         return stu.getConsultId();
@@ -98,7 +85,7 @@ public class StuInfoServiceImpl implements StuInfoService {
     public User getTeacherId(Student stu) {
         // 面试官
         if (null == stu.getTeacherId()) {
-            user.setUserId(0);
+            user.setUid("0");
             stu.setTeacherId(user);
         }
         return stu.getTeacherId();

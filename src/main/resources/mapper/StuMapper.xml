@@ -91,9 +91,9 @@
     </update>
 
     <resultMap id="stuResultMap" type="com.ss.entity.Student" autoMapping="true">
-        <association property="consultId" column="consult_id" select="com.ss.dao.UserMapper.getUserNameByUserId">
+        <association property="consultId" column="consult_id" select="com.ss.dao.UserMapper.getUserByUid">
         </association>
-        <association property="teacherId" column="teacher_id" select="com.ss.dao.UserMapper.getUserNameByUserId">
+        <association property="teacherId" column="teacher_id" select="com.ss.dao.UserMapper.getUserByUid">
         </association>
     </resultMap>
 

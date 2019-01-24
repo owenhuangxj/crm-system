@@ -15,7 +15,6 @@ public class StuServiceImpl implements StuService {
 
     @Override
     public Integer addStuResume(Student stu) {
-//        cache.addCache(stu.getStuNumber(), stu);
         //设置学号:当前时间
         stu.setStuNumber(DateUtil.getStuNumber());
         // 性别：0：女，1：男
