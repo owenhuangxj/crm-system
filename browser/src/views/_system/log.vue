@@ -143,7 +143,7 @@
       /*显示总人数*/
       logNumALL(){
         logApi.logNumAll() .then((res) => {
-        /*  alert(JSON.stringify(res.data))*/
+          /*  alert(JSON.stringify(res.data))*/
           this.cur_total = res.data.data
         })
         /*页面加载的数据*/
@@ -167,27 +167,27 @@
         console.log(`当前页: ${val}`);
       },
       /*返回上一页显示的条数*/
-      handlePrevPage(val){
-        console.log(`上页 ${val} 条`);
-      },
-      /*返回下一页显示的条数*/
-      handleNextPage(val){
-        console(`下页 ${val} 条`);
-      },
-      /*搜索框查询的信息*/
-      btn:function () {
-        var search = this.search
-        alert("是什么:" + this.search + this.value1+this.value2+this.value)
-      },
+        handlePrevPage(val){
+    console.log(`上页 ${val} 条`);
+  },
+  /*返回下一页显示的条数*/
+  handleNextPage(val){
+    console(`下页 ${val} 条`);
+  },
+  /*搜索框查询的信息*/
+  btn:function () {
+    var search = this.search
+    alert("是什么:" + this.search + this.value1+this.value2+this.value)
+  },
 
-    },
-    mounted() {
+  },
+  mounted() {
 
-    },
-    created() {
-      /* alert("我执行了careated的方法");*/
-      this.logNumALL();
-    },
+  },
+  created() {
+    /* alert("我执行了careated的方法");*/
+    this.logNumALL();
+  },
 
   };
 </script>

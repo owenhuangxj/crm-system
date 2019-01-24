@@ -24,4 +24,11 @@ export  default {
     })
   },
 
+  /*按条件查询日志*/
+  asyncSelectLog(){
+    return request({
+      url: '/asyncSelectLog',
+      method: 'get',
+    })
+  }
 }
