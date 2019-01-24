@@ -21,9 +21,16 @@
           <svg-icon icon-class="eye"/>
         </span>
       </el-form-item>
-      <el-button type="primary" style="width:100%;margin-bottom:30px;" :loading="loading"
-                 @click.native.prevent="handleLogin">登录
-      </el-button>
+      <div>
+        <el-button type="primary" style="width:100%;margin-bottom:30px;" :loading="loading"
+                   @click.native.prevent="handleLogin">登录</el-button>
+      </div>
+      <div>
+        <div>
+          <el-button type="primary" style="width:100%;margin-bottom:30px;"
+                     @click.native.prevent="ToRegister">注册</el-button>
+        </div>
+      </div>
       <div class="tips">
         <span>管理员帐号 : admin</span>
         <span>密码 : 123456</span>
@@ -36,10 +43,7 @@
         <span style="margin-right:18px;">普通用户帐号 : zhangfei</span>
         <span>密码 : 123456</span>
       </div>
-
     </el-form>
-
-
   </div>
 </template>
 
@@ -86,6 +90,11 @@
         } else {
           this.passwordType = 'password'
         }
+      },
+      ToRegister(){
+
+        this.$router.push({path: '/register'});
+        alert("你好！");
       },
       handleLogin() {
         this.$refs.loginForm.validate(valid => {
