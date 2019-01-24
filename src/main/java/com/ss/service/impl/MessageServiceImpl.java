@@ -19,7 +19,7 @@ import java.util.Set;
  * @description: 消息服务层实现类
  * redis中存放消息对象的方式：
  * 每个用户有三个zset集合，分别为unreadmsg，readmsg和deletemsg。
- * 集合名后跟用户id实现唯一。
+ * 集合名后跟用户登录帐号实现唯一。
  * 集合中score值对应消息的msgid，以便查找与操作
  * @author: August
  * @create: 2019-01-12 18:18
@@ -31,7 +31,7 @@ public class MessageServiceImpl implements MessageService {
     @Autowired
     private Websocket ws;
     @Override
-    public Set<Object> getMessageList(Integer userId, Integer status) {
+    public Set<Object> getMessageList(String uname, Integer status) {
         String ZsetPreName = "";
         switch (status) {
             case 0:
@@ -46,13 +46,13 @@ public class MessageServiceImpl implements MessageService {
             default:
                 break;
         }
-        Set<Object> messages = rt.opsForZSet().range(ZsetPreName + userId, 0, -1);
-        System.out.println("从" + ZsetPreName + userId + "中获取了" + messages.size() + "条");
+        Set<Object> messages = rt.opsForZSet().range(ZsetPreName + uname, 0, -1);
+        System.out.println("从" + ZsetPreName + uname + "中获取了" + messages.size() + "条");
         return messages;
     }
 
     @Override
-    public Integer insertMessage(List<Message> msgList, User user) {
+    public Integer insertMessage(List<Message> msgList, String uname) {
         //zset集合中，score = msgid。
 //        if (rt.opsForZSet().zCard("unreadmsg" + user.getUserId()) + msgList.size() >= 9999) {
 //            System.out.println("用户" + user.getUserName() + "信息过多，添加失败");
@@ -63,7 +63,7 @@ public class MessageServiceImpl implements MessageService {
         String date = DateUtil.getDateTime();
         int i = 0;
         // 获取缓存中消息score最大值，在此基础上+1赋值给下一条要插入的消息
-        Double score = getMaxScoreInZsets(user.getUserId()) + 1;
+        Double score = getMaxScoreInZsets(uname) + 1;
         for (; i < msgList.size(); i++) {
             Message message = msgList.get(i);
             message.setId(score.intValue());
@@ -78,12 +78,12 @@ public class MessageServiceImpl implements MessageService {
 //        for (; i < msgList.size(); i++) {
 //            rt.opsForZSet().add("unreadmsg" + user.getUserId(), msgList.get(i), user.getUserId() * 10000 + msgList.get(i).getId());
 //        }
-        System.out.println("添加了" + i + "条到unreadmsg" + user.getUserId());
+        System.out.println("添加了" + i + "条到unreadmsg" + uname);
         return i;
     }
 
     @Override
-    public Boolean setMessageStatus(Integer msgId, Integer oldStatus, Integer userId) {
+    public Boolean setMessageStatus(Integer msgId, Integer oldStatus, String uname) {
         String oldZset = "";
         String newZset = "";
         Integer newStatus = 0;
@@ -106,8 +106,8 @@ public class MessageServiceImpl implements MessageService {
                 newZset = "readmsg";
                 newStatus = 1;
         }
-        oldZset += userId;
-        newZset += userId;
+        oldZset += uname;
+        newZset += uname;
         // 将消息从旧集合拿出，并从旧集合删除
         Set<Object> set1 = rt.opsForZSet().rangeByScore(oldZset, msgId, msgId);
 
@@ -122,8 +122,8 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public Double getMaxScoreInZsets(Integer userid) {
-        String[] zsetArr = {"readmsg" + userid, "unreadmsg" + userid, "deletemsg" + userid};
+    public Double getMaxScoreInZsets(String uname) {
+        String[] zsetArr = {"readmsg" + uname, "unreadmsg" + uname, "deletemsg" + uname};
         List<Integer> scores = new ArrayList<>();
         for (int i = 0; i < zsetArr.length; i++) {
             // 获取该zset中score最大的对象
@@ -144,33 +144,33 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public Integer setAllStatus(String func, Integer userId) {
+    public Integer setAllStatus(String func, String uname) {
         switch (func) {
             case "readAll":
                 // 全部标为已读（unreadmsg集合中的所有消息转移到readmsg中）
-                Set<Object> range = rt.opsForZSet().range("unreadmsg" + userId, 0, -1);
+                Set<Object> range = rt.opsForZSet().range("unreadmsg" + uname, 0, -1);
                 for (Object object : range) {
                     Message msg = (Message) object;
                     msg.setStatus(1);
-                    rt.opsForZSet().add("readmsg" + userId, msg, msg.getId());
+                    rt.opsForZSet().add("readmsg" + uname, msg, msg.getId());
                 }
                 System.out.println("从unreadmsg中转移了" + range.size() + "条消息到readmsg中");
-                rt.delete("unreadmsg" + userId);
+                rt.delete("unreadmsg" + uname);
                 return range.size();
             case "delAll":
                 // 删除全部（readmsg集合中的所有消息转移到deletemsg中）
-                Set<Object> range1 = rt.opsForZSet().range("readmsg" + userId, 0, -1);
+                Set<Object> range1 = rt.opsForZSet().range("readmsg" + uname, 0, -1);
                 for (Object object : range1) {
                     Message msg = (Message) object;
                     msg.setStatus(2);
-                    rt.opsForZSet().add("deletemsg" + userId, msg, msg.getId());
+                    rt.opsForZSet().add("deletemsg" + uname, msg, msg.getId());
                 }
                 System.out.println("从readmsg中转移了" + range1.size() + "条消息到deletemsg中");
-                rt.delete("readmsg" + userId);
+                rt.delete("readmsg" + uname);
                 return range1.size();
             case "clearAll":
                 // 清空回收站（清空deletemsg集合中的所有数据）
-                Boolean delete = rt.delete("deletemsg" + userId);
+                Boolean delete = rt.delete("deletemsg" + uname);
                 System.out.println("删除集合deletemsg"+delete);
                 return 1;
 

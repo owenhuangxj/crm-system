@@ -16,13 +16,13 @@ import lombok.ToString;
 public class Message {
     private Integer id;
     /**
-     * 发送者的id
+     * 发送者的登录帐号
      */
-    private int msgFrom;
+    private String msgFrom;
     /**
-     * 接收者的id
+     * 接收者的登录帐号
      */
-    private int msgTo;
+    private String msgTo;
     /**
      * 标题
      */
