@@ -1,7 +1,9 @@
 package com.ss.service;
 
 import com.ss.entity.TrackModel;
-import com.ss.util.PageData;
+import com.ss.vo.Json;
+
+import java.util.List;
 
 public interface TrackModelService {
 
@@ -13,6 +15,19 @@ public interface TrackModelService {
      * @param pageSize 分页参数：一页显示多少条
      * @return 返回前端需要的指定格式的数据
      */
-    PageData<TrackModel> getTrackModel(String input, String value, Integer pageNum, Integer pageSize);
+    Json getTrackModel(String input, String value, Integer pageNum, Integer pageSize);
 
+    /**
+     * 获取全部咨询师
+     * @return
+     */
+    Json getUserNames();
+
+    /**
+     * 修改咨询师
+     * @param nick
+     * @param track
+     * @return
+     */
+    Json updateNick(String nick, List<TrackModel> trackModel);
 }
