@@ -15,7 +15,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/")
-public class LznController {
+public class LogController {
     @Autowired
     private LogService ls;
     /*测试*//*
@@ -58,8 +58,8 @@ public class LznController {
     /*根据条件查找数据*/
     @GetMapping("/asyncSelectLog")
     @ResponseBody
-    public Json findSelectAsyncLog(String logType,String email,String userName,String startTime,String endTime,@PathParam("currentPage") Integer currentPage, @PathParam("currentPageSize") Integer currentPageSize){
-        List asyncSelectLog = ls.getAsyncSelectLog(logType, email, userName, startTime, endTime, currentPage, currentPageSize);
+    public Json findSelectAsyncLog(String logType,String uId,String nick,String startTime,String endTime,@PathParam("currentPage") Integer currentPage, @PathParam("currentPageSize") Integer currentPageSize){
+        List asyncSelectLog = ls.getAsyncSelectLog(logType, uId, nick, startTime, endTime, currentPage, currentPageSize);
         Json json = new Json("根据条件查询数据",true,200,"asyncSelectLog",asyncSelectLog);
         return json;
     }

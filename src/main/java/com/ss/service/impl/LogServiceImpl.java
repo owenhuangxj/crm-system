@@ -38,8 +38,8 @@ public class LogServiceImpl implements LogService {
 
     /*按要求查找日志内容*/
     @Override
-    public List<Log> getAsyncSelectLog(String logType,String email,String userName,String startTime, String endTime,Integer currentPage, Integer currentPageSize) {
-        return lm.getAsyncSelectLog(logType,email,userName,startTime,endTime,(currentPage-1)*currentPageSize,currentPageSize);
+    public List<Log> getAsyncSelectLog(String logType,String uId,String nick,String startTime, String endTime,Integer currentPage, Integer currentPageSize) {
+        return lm.getAsyncSelectLog(logType,uId,nick,startTime,endTime,(currentPage-1)*currentPageSize,currentPageSize);
     }
 
 

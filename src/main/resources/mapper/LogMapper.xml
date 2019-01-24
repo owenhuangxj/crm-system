@@ -25,8 +25,8 @@
             <if test="logType!=null and logType!=''">
                 and log_type=#{logType}
             </if>
-            <if test="email!=null and email!=''">
-                and email = #{email}
+            <if test="uId!=null and uId!=''">
+                and uid = #{uId}
             </if>
             <if test="nick!=null and nick!=''">
                 and nick like concat('%',#{nick},'%')
