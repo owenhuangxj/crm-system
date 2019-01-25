@@ -26,8 +26,14 @@ public interface TrackModelService {
     /**
      * 修改咨询师
      * @param nick
-     * @param track
+     * @param trackModel
      * @return
      */
     Json updateNick(String nick, List<TrackModel> trackModel);
+
+    /**
+     * 修改学员状态（撤回简历）
+     * @return
+     */
+    Json updateStuStatus(List<TrackModel> trackModel);
 }

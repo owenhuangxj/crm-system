@@ -34,5 +34,16 @@ export default {
       url: "trace/getUserNames",
       method: "post"
     })
+  },
+
+  /**
+   * 撤回简历
+   */
+  updateStuStatus(data){
+    return request({
+      url: "trace/updateStuStatus",
+      method: "post",
+      data
+    })
   }
 }

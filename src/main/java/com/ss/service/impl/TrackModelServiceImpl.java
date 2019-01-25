@@ -67,7 +67,19 @@ public class TrackModelServiceImpl implements TrackModelService {
             stuNumber.add(tm.getStuNumber());
         }
         Integer rows = tmm.updateNick(nick, stuNumber);
-        String msg = rows > 0 ? "成功修改：" + rows + "行！" : "修改失败！请刷新后重试...";
+        String msg = rows > 0 ? "成功调换" + rows + "名学员的咨询师" : "修改失败！请刷新后重试...";
+        Json json = new Json(null, true, rows, msg, null);
+        return json;
+    }
+
+    @Override
+    public Json updateStuStatus(List<TrackModel> trackModels) {
+        List<String> number = new ArrayList<>();
+        for (TrackModel tm : trackModels) {
+            number.add(tm.getStuNumber());
+        }
+        Integer rows = tmm.updateStuStatus(number);
+        String msg = rows > 0 ? "成功撤回" + rows + "份简历" : "撤回失败！请刷新后重试...";
         Json json = new Json(null, true, rows, msg, null);
         return json;
     }

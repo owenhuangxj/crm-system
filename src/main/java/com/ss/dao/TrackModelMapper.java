@@ -44,4 +44,10 @@ public interface TrackModelMapper {
      * @return 受影响行数
      */
     Integer updateNick(@Param("nick") String nick, @Param("stuNumber") List<String> stuNumber);
+
+    /**
+     * 修改学员状态（撤回简历）
+     * @return
+     */
+    Integer updateStuStatus(@Param("stuNumber") List<String> stuNumber);
 }

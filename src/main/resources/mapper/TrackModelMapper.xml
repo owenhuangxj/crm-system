@@ -63,6 +63,14 @@
         </foreach>
     </update>
 
+    <!--修改学生状态（撤回简历）-->
+    <update id="updateStuStatus" parameterType="java.util.List">
+        update t_student set stu_status=0 where stu_number in
+        <foreach collection="stuNumber" open="(" separator="," close=")" item="item">
+            #{item}
+        </foreach>
+    </update>
+
 
     <!--咨询师映射-->
     <resultMap id="userMap" type="sysUser" autoMapping="true"/>
