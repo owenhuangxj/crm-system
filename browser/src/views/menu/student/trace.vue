@@ -180,6 +180,7 @@
       rowClick(column) {
         console.log(column);
         const stu = column.stuNumber;
+        alert("行的双击事件：" + stu);
         this.$router.push({path:'stutraceinfo',params:{stu}})
       },
       // 单独选择一行或多行（未点全选的情况）

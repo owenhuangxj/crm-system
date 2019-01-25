@@ -14,6 +14,6 @@ public interface LogService<PageData> {
     /*查询日志所有内容*/
     List<Log> getSelectLog(Integer currentPage, Integer currentPageSize);
     /*按要求查找日志内容*/
-    List<Log> getAsyncSelectLog(String logType, String email, String userName, String startTime, String endTime, Integer currentPage, Integer currentPageSize);
+    List<Log> getAsyncSelectLog(String logType, String uId, String nick, String startTime, String endTime, Integer currentPage, Integer currentPageSize);
 
 }

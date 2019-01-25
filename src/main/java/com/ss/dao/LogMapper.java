@@ -17,6 +17,6 @@ public interface LogMapper extends BaseMapper<Log> {
     /*查询日志所有内容*/
     List<Log> getSelectLog(@Param("currentPage") Integer currentPage, @Param("currentPageSize") Integer currentPageSize);
     /*根据条件查询日志*/
-    List<Log> getAsyncSelectLog(@Param("logType") String logType, @Param("email") String email, @Param("nick") String userName, @Param("startTime") String startTime, @Param("endTime") String endTime, @Param("currentPage") Integer currentPage, @Param("currentPageSize") Integer currentPageSize);
+    List<Log> getAsyncSelectLog(@Param("logType") String logType, @Param("uId") String uId, @Param("nick") String nick, @Param("startTime") String startTime, @Param("endTime") String endTime, @Param("currentPage") Integer currentPage, @Param("currentPageSize") Integer currentPageSize);
 
 }

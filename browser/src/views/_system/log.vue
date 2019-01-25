@@ -58,11 +58,11 @@
         width="250">
       </el-table-column>
       <el-table-column
-        prop="userId"
+        prop="uid"
         label="用户账号">
       </el-table-column>
       <el-table-column
-        prop="userName"
+        prop="nick"
         label="用户名">
       </el-table-column>
       <el-table-column
@@ -123,8 +123,8 @@
           logType:'',
           logErrorCode: '',
           logContent:'',
-          userId:'',
-          userName: '',
+          uid:'',
+          nick: '',
           logDate: '',
         }],
         currentPage4: 1,//默认从第几页开始
@@ -143,12 +143,12 @@
       /*显示总人数*/
       logNumALL(){
         logApi.logNumAll() .then((res) => {
-        /*  alert(JSON.stringify(res.data))*/
+          /*  alert(JSON.stringify(res.data))*/
           this.cur_total = res.data.data
         })
         /*页面加载的数据*/
         logApi.selectLog(this.cur_page,this.cur_page_size) .then((res) => {
-          /*alert(JSON.stringify(res.data))*/
+         /* alert(JSON.stringify(res.data))*/
           this.tableData = res.data.data
         })
 
@@ -167,27 +167,27 @@
         console.log(`当前页: ${val}`);
       },
       /*返回上一页显示的条数*/
-      handlePrevPage(val){
-        console.log(`上页 ${val} 条`);
-      },
-      /*返回下一页显示的条数*/
-      handleNextPage(val){
-        console(`下页 ${val} 条`);
-      },
-      /*搜索框查询的信息*/
-      btn:function () {
-        var search = this.search
-        alert("是什么:" + this.search + this.value1+this.value2+this.value)
-      },
+        handlePrevPage(val){
+    console.log(`上页 ${val} 条`);
+  },
+  /*返回下一页显示的条数*/
+  handleNextPage(val){
+    console(`下页 ${val} 条`);
+  },
+  /*搜索框查询的信息*/
+  btn:function () {
+    var search = this.search
+    alert("是什么:" + this.search + this.value1+this.value2+this.value)
+  },
 
-    },
-    mounted() {
+  },
+  mounted() {
 
-    },
-    created() {
-      /* alert("我执行了careated的方法");*/
-      this.logNumALL();
-    },
+  },
+  created() {
+    /* alert("我执行了careated的方法");*/
+    this.logNumALL();
+  },
 
   };
 </script>

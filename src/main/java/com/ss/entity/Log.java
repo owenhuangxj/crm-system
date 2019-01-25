@@ -28,8 +28,6 @@ public class Log implements Serializable {
     private Date logDate;
     /*日志操作人*/
     private String nick;
-    /*用户注册的用户名*/
-    private String email;
 
 
 }
