@@ -1,13 +1,16 @@
 <template>
   <div id="tracktable">
     <div id="button_div">
-      <span id="stuInfo">学员信息操作</span>&nbsp;
-      <el-button class="el_bt" round @click="delResoume"><i class="el-icon-delete"></i>&nbsp;删除简历</el-button>
-      <el-button class="el_bt" round @click="recallResoume"><i class="el-icon-circle-close-outline"></i>&nbsp;撤回简历</el-button>
-      <el-button class="el_bt" round @click="getUserNames"><i class="el-icon-refresh"></i>&nbsp;调换咨询师</el-button>
-
+      <div v-permission="['root']">
+        <span id="stuInfo">学员信息操作</span>&nbsp;
+        <!--<el-button class="el_bt" round @click="delResume"><i class="el-icon-delete"></i>&nbsp;删除简历</el-button>-->
+        <el-button class="el_bt" round @click="recallResume"><i class="el-icon-circle-close-outline"></i>&nbsp;撤回简历
+        </el-button>
+        <el-button class="el_bt" round @click="getUserNames"><i class="el-icon-refresh"></i>&nbsp;调换咨询师</el-button>
+      </div>
       <!--弹出“调换咨询电话”的对话框-->
-      <el-dialog title="调换咨询师" :visible.sync="dialogFormVisible" center :append-to-body='true' :lock-scroll="false" width="30%">
+      <el-dialog title="调换咨询师" :visible.sync="dialogFormVisible" center :append-to-body='true' :lock-scroll="false"
+                 width="30%">
         <p>请选择调换的咨询师</p>
         <el-select v-model="username">
           <el-option v-for="item in userNames" :label="item.label" :value="item.value"></el-option>
@@ -33,16 +36,17 @@
 
     <el-tooltip class="item" effect="dark" content="双击行查看学员详情" placement="top">
       <!--表格 @row-click：行的单击事件，@cell-dblclick：行的双击事件，@select-all：全选，@clearSelection：取消全选-->
-      <el-table ref="multipleTable" border :data="tableData" @row-dblclick="rowClick($event)" @selection-change="selectionChange"
+      <el-table ref="multipleTable" border :data="tableData" @row-dblclick="rowClick($event)"
+                @selection-change="selectionChange"
                 @select-all="selectAll(tableData)" @clearSelection="clearSelect" reserve-selection
-                :default-sort = "{prop: 'stuLevel', order: 'descending'}">
+                :default-sort="{prop: 'stuLevel', order: 'descending'}">
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column type="index" label="编号" width="55"></el-table-column>
         <el-table-column prop="flag" label="状态标识" width="80"></el-table-column>
         <el-table-column prop="stuNumber" label="学员编号" width="110"></el-table-column>
         <el-table-column prop="stuName" label="学员姓名" width="90"></el-table-column>
         <el-table-column prop="stuLevel" label="优先级" width="70"></el-table-column>
-        <el-table-column prop="trackCount" label="跟踪次数" width="80"></el-table-column>
+        <!--<el-table-column prop="trackCount" label="跟踪次数" width="80"></el-table-column>-->
         <el-table-column prop="stuPhoneNum" label="手机号" width="120"></el-table-column>
         <el-table-column prop="stuSource" label="来源途径" width="110"></el-table-column>
         <el-table-column prop="stuStatus" label="进度情况" width="95"></el-table-column>
@@ -72,8 +76,11 @@
 <script>
 
   import traceApi from '@/api/trace'
+  // 当然你也可以为了方便使用，将它注册到全局
+  import permission from '@/directive/permission/index.js' // 权限判断指令
 
   export default {
+    directives: {permission},
     data() {
       return {
         tableData: [], // 后台传入的table表数据
@@ -97,8 +104,6 @@
         value: '1',      // 下拉框，默认让它选中“姓名”
         multipleSelection: {},     // 储存选中行的数据
         dialogFormVisible: false,  // “调换咨询电话”的对话框 false为关闭
-        // resoumeFormVisible: false, // “导入简历”的对话框
-        // fileList: [], // 上传文件的数组
         form: {
           info: '',
           template: '智联招聘',
@@ -131,16 +136,16 @@
 
       },
       // 调换咨询师，获取所有咨询师供管理员选择
-      getUserNames(){
-        if(this.multipleSelection[0] !== undefined){
+      getUserNames() {
+        if (this.multipleSelection[0] !== undefined) {
           traceApi.queryUserNames({}).then(res => {
             this.userNames = res.data.data;
             console.log(res.data);
           }).catch(err => {
             console.log("错误信息：" + err)
           });
-          this.dialogFormVisible = true
-        }else{
+          this.dialogFormVisible = true;
+        } else {
           this.$message({ // 提示框
             type: 'warning',
             message: '至少选择一个学员'
@@ -160,9 +165,9 @@
       },
       // 点击查询时执行的函数
       doSearch() {
-        if(this.input !== ""){
+        if (this.input !== "") {
           this.getNewsList();
-        }else{
+        } else {
           // 如果没输入查询关键字会给与提示
           this.$message({
             type: 'info',
@@ -174,12 +179,12 @@
       // 双击行执行的函数
       rowClick(column) {
         console.log(column);
-        const stu = column.stuName;
+        const stu = column.stuNumber;
         alert("行的双击事件：" + stu);
-        // this.$router.push({path:'stutraceinfo',params:{stu}})
+        this.$router.push({path:'stutraceinfo',params:{stu}})
       },
       // 单独选择一行或多行（未点全选的情况）
-      selectionChange(val){
+      selectionChange(val) {
         this.multipleSelection = val
       },
       // 取消全选
@@ -196,44 +201,66 @@
       selectAll(val) {
         this.multipleSelection = val;
       },
-      // 删除简历
-      delResoume() {
-        alert("删除简历操作");
-      },
       // 撤回简历
-      recallResoume() {
-        alert("撤回简历的操作");
+      recallResume() {
+        let selection = {
+          trace: this.multipleSelection
+        };
+        if (this.multipleSelection[0] !== undefined) {
+          this.$confirm('你将撤回该学员的简历, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            traceApi.updateStuStatus(selection).then(res => {
+              for(var i = 0;i < this.multipleSelection.length;i++){
+                this.multipleSelection[i].stuStatus = "未分配"
+              }
+              this.$message({
+                type: "success",
+                message: res.data.msg
+              });
+              this.clearSelect();
+            })
+          })
+        } else {
+          this.$message({
+            type: "warning",
+            message: "至少选择一个学员"
+          });
+        }
+
       },
       // 提交咨询电话时执行
-      doConfirm(){
+      doConfirm() {
         // 调换咨询电话的参数
         let exchange = {
-           nick   : this.username,
-           trace  : this.multipleSelection
-         };
+          nick: this.username,
+          trace: this.multipleSelection
+        };
         traceApi.exchangePhone(
           exchange
         ).then(res => {
+          // 修改成功后及时回显
+          for (var i = 0; i < this.multipleSelection.length; i++) {
+            this.multipleSelection[i].nick = this.username;
+          }
+          this.clearSelect();
+          // 提示用户修改成功
           this.$message({
             type: "info",
             message: res.data.msg
-          })
+          });
         }).catch(err => {
           this.$message({
             type: "warning",
             message: "系统内部错误！请联系管理员。错误代码：" + err
           })
         });
-
-        if(this.ruleForm.resource === '电话'){
-          this.multipleSelection.stuPhoneNum = this.form.info
-        }else{
-          this.multipleSelection.userName = this.form.info
-        }
         this.dialogFormVisible = false
       },
       // 提交
-      submitUpload(){
+      submitUpload() {
         this.$refs.upload.submit();
       },
 
@@ -264,7 +291,7 @@
     height: 50px;
   }
 
-  #stuInfo, .el_bt, #search{
+  #stuInfo, .el_bt, #search {
     font-family: Microsoft YaHei;
     padding: 10px;
   }

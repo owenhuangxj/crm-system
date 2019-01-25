@@ -52,20 +52,28 @@ public class TraceController {
     @ResponseBody
     public Json getUserNames(){
         Json userNames = tms.getUserNames();
-        System.out.println("userNames：" + userNames);
         return userNames;
     }
 
     @RequestMapping("/updateNick")
     @ResponseBody
-    public Json updateNick(HttpServletRequest req, @RequestBody String body) {
+    public Json updateNick(@RequestBody String body) {
         JSONObject obj = JSON.parseObject(body);
         JSONArray trace = obj.getJSONArray("trace");
         String nick = obj.getString("nick");
         List<TrackModel> trackModel = trace.toJavaList(TrackModel.class);
-        System.out.println("nick：" + nick + "，track：" + trackModel);
         Json json = tms.updateNick(nick, trackModel);
         return json;
     }
 
+    @RequestMapping("/updateStuStatus")
+    @ResponseBody
+    public Json updateStuStatus(@RequestBody String body){
+        JSONObject obj = JSON.parseObject(body);
+        JSONArray trace = obj.getJSONArray("trace");
+        List<TrackModel> trackModels = trace.toJavaList(TrackModel.class);
+        System.out.println("trackModels：" + trackModels);
+        Json json = tms.updateStuStatus(trackModels);
+        return json;
+    }
 }
