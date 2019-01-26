@@ -1,7 +1,7 @@
 <template>
     <div>
-        <el-button type="text" @click="dialogFormVisible = true">打开嵌套表单的 Dialog</el-button>
-        <el-dialog title="收货地址" :visible.sync="dialogFormVisible">
+        <span type="text" @click="dialogFormVisible = true"><i class="el-icon-plus">新建简历</i></span>
+        <el-dialog title="新建简历" :visible.sync="dialogFormVisible">
             <div id="information">
                 <div style="color: #66b1ff">| 基础信息</div>
                 <hr/>

@@ -47,11 +47,12 @@ public class csvTests {
 
     }  @Test
     public void hell() {
-
-
         List<SysUser> allUser = rasi.getAllUser();
         System.out.println(allUser.size());
-
+    }
+    @Test
+    public void he1ll() {
+       rasi.deleteByStuId(null);
     }
 
 

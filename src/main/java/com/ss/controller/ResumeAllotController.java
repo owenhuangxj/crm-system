@@ -50,24 +50,32 @@ public class ResumeAllotController {
         Integer rows = ras.importResumeFromExcele(src, null);
         return  Json.succ("import").data("插入"+rows+"条数据",rows);
     }
-
-    @RequestMapping("/getUnAllotResume")
-    public @ResponseBody Json getUnAllotResume() {
-        IPage<Student> data = ras.getOrginStudent(1L, 1L, "赵", 0);
+/*, produces = "application/json;charset=UTF-8"*/
+    @RequestMapping(value ="/getUnAllotResume")
+    public @ResponseBody Json getUnAllotResume(@RequestParam("current") Long current,@RequestParam("size") Long size ,@RequestParam("column")Integer column  ,@RequestParam("value")String value){
+        System.out.println(current);
+        IPage<Student> data = ras.getOrginStudent(current, size, value, column);
         return Json.succ("get data ").data("data",data);
     }
+
 
     @RequestMapping("/getAllUsers")
     public @ResponseBody Json getAllUsers() {
 
-        return   Json.succ("get all users").data("用户",ras.getAllUser());
+        return   Json.succ("get all users").data("user",ras.getAllUser());
     }
     @RequestMapping("/allotResume")
     public @ResponseBody
-    Json AllotResume(@RequestParam("map") Map<Integer,Integer> map) {
-        Integer rows = ras.allotResume(map);
-        return Json.succ("allot").data("分发了"+rows+"份简历",rows);
-    }
+    Json AllotResume(@RequestParam("key")String key,@RequestParam("value")Integer value[],@RequestParam("allotTime")String time,Integer way) {
+        System.out.println(key+" "+value[1]+"  "+way+"   "+time);
 
+        Integer rows = ras.allotResume(1,value,way,time+"");
+        return Json.succ("allot").data("allot",rows);
+    }
+    @RequestMapping("/delByStuId")
+    public @ResponseBody Json delByStuId(@RequestParam("stuIds") Integer[]stuIdList) {
+
+        return   Json.succ("get all users").data("del",ras.deleteByStuId(stuIdList));
+    }
 
 }

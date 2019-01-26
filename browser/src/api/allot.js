@@ -9,7 +9,7 @@ export  default {
   getAllUsers() {
     return request({
       url: '/allot/getAllUsers',
-      method: 'get',
+      method: 'post',
     });
   },
   /**从excle中导入简历数据*/
@@ -20,21 +20,33 @@ export  default {
     })
   },
 /*查询所有简历*/
-getUnAllotResume()
+getUnAllotResume(data)
 {
+  console.log(data.get("column"));
+  console.log(data.get("value"));
+  console.log(data.get("size"));
+  console.log(data.get("current"));
   return request({
     url: '/allot/getUnAllotResume',
-    method: 'get',
+    method: 'post',
+    data: data
   })
 },
   /*分发简历*/
-allotResume(){
+allotResume(data){
   return request({
     url: '/allot/allotResume',
-    method: 'get',
+    method: 'post',
+    data:data,
   })
-
-}
+},
+  delByStuId(data){
+    return request({
+      url: '/allot/delByStuId',
+      method: 'post',
+      data:data,
+    })
+  }
 
 }
 

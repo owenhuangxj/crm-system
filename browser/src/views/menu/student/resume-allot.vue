@@ -1,24 +1,33 @@
 <template>
+  <div>
 
-    <div id="resumeAllot">
 
+
+  <span  @click="allotDialog=true"><i  class="el-icon-message"  >简历分配</i> </span>
+
+  <div id="resumeAllot">
+  <el-dialog  title="简历分配"
+      :visible.sync="allotDialog"
+    :before-close="handleClose"
+    :close-on-click-modal=false
+  >
 
             <div id="tab_title" >
-              <a @click="tabSwitch(0)">固定分配</a><a @click="tabSwitch(1)">随机分配</a>
+              <a @click="tabSwitch(1)">随机分配</a> <a  id="fixed" @click="tabSwitch(0)">固定分配</a>
             </div>
             <!--横线--> <!--滑动条-->
             <div id="tabScroll" class="split"><div  id="scrollBlock"></div></div>
             <!--人员选择-->
             <div id="tab-emp" class="context">
                 <span>人&emsp;&ensp;员:</span>
-                <el-select   class="allot_input" v-model="employeeSelect" multiple placeholder="请选择">
-                    <el-option
-                            v-for="item in employees"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                    </el-option>
-                </el-select>
+                <el-select  id="empSelector" class="allot_input"  v-model="employeeSelect"  :multiple=true  placeholder="请选择">
+              <el-option
+                v-for="item in employees"
+                :key="item.uid"
+                :label="item.nick"
+                :value="item.uid">
+              </el-option>
+            </el-select>
                 </div>
                   <div id="allot_num" class="context">
                     <span>分配数量:</span>
@@ -27,30 +36,32 @@
 
              <div id="allot_time" class="context">
             <span>分配时间：</span>
-            <el-radio v-model="radio" label="1" @change="hideTimePicker()">立刻发送</el-radio>
-            <el-radio v-model="radio" label="2" @change="showTimePicker()">选择时间</el-radio>
+            <el-radio v-model="radio" label="1"   @change="setAllotTime('now')">立刻发送</el-radio>
+            <el-radio v-model="radio" label="2"   @change="setAllotTime('fixed')">选择时间</el-radio>
             <br/>
             <div id="timePicker" class="context">
-                 <el-date-picker  class="allot_input" v-model="dateDefault" type="datetime" placeholder="选择任务时间" align="right" :picker-options="timePicker"></el-date-picker>
+                 <el-date-picker  class="allot_input" v-model="allotTime" type="datetime" placeholder="选择任务时间" align="right" :picker-options="timePicker"></el-date-picker>
             </div>
           </div>
 
-
       <div id="tab-button">
         <div class="split"/>
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        <el-button @click="allotDialog = false">取 消</el-button>
+        <el-button type="primary" @click="allot()">确 定</el-button>
       </div>
 
-
-</div>
-
+  </el-dialog>
+  </div>
+  </div>
 </template>
 
 <script>
   import allotApi from  '@/api/allot';
 
   export default {
+
+    props:["selectedId"],
+
         data: function () {
             return {
                 /*时间选框*/
@@ -83,7 +94,6 @@
                     }]
                 },
                 radio: 'allotTime',
-                dateDefault: '',
                 // 标签名
                 title: "简历分配",
                 //数字框每次增量
@@ -93,6 +103,9 @@
                 /*下拉框中员工*/
                 employees: [],
                 employeeSelect: [],
+                allotDialog:false,
+                allotTime:'' ,
+                index:'',
             }
         },
         created() {
@@ -102,37 +115,54 @@
             data() {
                 alert("computed方法执行")
             },
-
         },
         mounted: function () {
-            console.log("mounted执行");
-         allotApi.getAllUsers().then(response => {
-            this.employees = response.data;
-            console.log(response.data);
+          allotApi.getAllUsers().then(response => {
+            this.employees = response.data.user;
+            console.log(this.employees)
           })
         },
         methods: {
             //选项卡变化
             tabSwitch(index) {
+            /*0 是固定分配 ,1是随机分配*/
+              console.log(this.selectedId);
               switch (index){
                 case 0:
-                  document.getElementById("allot_num").style.display = "none";
-                  document.getElementById("scrollBlock").style.marginLeft="0em";
+                  if(0==this.selectedId.length){
+                    this.$alert('请先选择要分配的简历', '警告', {
+                      confirmButtonText: '确定',
+                    });
+                    break;
+                  }else{
+                    document.getElementById("allot_num").style.display = "none";
+                    document.getElementById("scrollBlock").style.marginLeft="6.5em";
+                    this.index=0;
+                  }
                   break;
                 case 1:
                   document.getElementById("allot_num").style.display = "block";
-                  document.getElementById("scrollBlock").style.marginLeft="6.5em";
+                  document.getElementById("scrollBlock").style.marginLeft="0em";
+                  this.index=1;
+                  this.num=this.selectedId.length;
                   break;
               }
                 console.log('执行Tab');
             },
 
-            showTimePicker() {
-                document.getElementById("timePicker").style.display = "block";
+
+            setAllotTime(way) {
+              switch (way){
+                case 'now':
+                  this.allotTime= -1;
+                  document.getElementById("timePicker").style.display = "none";
+                  break;
+                case 'fixed':
+                  document.getElementById("timePicker").style.display = "block";
+                  break;
+              }
             },
-            hideTimePicker() {
-                document.getElementById("timePicker").style.display = "none";
-            },
+
             handleClose(done) {
                 this.$confirm('确认关闭？')
                     .then(_ => {
@@ -141,15 +171,48 @@
                     .catch(_ => {
                     });
             },
+          allot(){
+            let params=new URLSearchParams();
+
+            switch (this.index) {
+              case 0:
+                params.append("key",this.employeeSelect[0]);
+                params.append("value",this.selectedId);
+                params.append("way",0);
+                params.append("allotTime",this.allotTime);
+                break;
+              case 1:
+              break;
+            }
+            console.log(params.get("key"))
+
+            allotApi.allotResume(params).then(response => {
+              this.employees = response.data;
+            })
+          }
         },
         /*监控函数*/
         watch: {
-            dateDefault: {
+            allotTime: {
                 deep: true,
                 handler: function (newVal, oldVal) {
-                    console.log('new:', newVal, 'old:', oldVal);
+                    console.log('allotTime:','new:', newVal, 'old:', oldVal);
                 },
             },
+          employeeSelect:{
+            deep: true,
+            handler: function (newVal, oldVal) {
+              console.log('employeeSelect:','new:', newVal, 'old:', oldVal);
+            },
+          },
+          index:{
+            deep: true,
+            handler: function (newVal, oldVal) {
+
+              console.log("index:",'new:', newVal, 'old:', oldVal);
+            },
+
+          }
             }
 
 
@@ -162,7 +225,6 @@
 
     #resumeAllot {
         background: #fff;
-        border: 1px solid #ddd;
         border-radius: 5px;
       padding-left: 2em;
       padding-right: 2em;
@@ -195,7 +257,7 @@
     }
 
     #allot_num{
-        display: none;
+        display: block;
     }
 
     #timePicker {
@@ -207,8 +269,6 @@
         color: #000;
         text-decoration: none;
     }
-
-
 
     /*分割线*/
     .split {
