@@ -74,10 +74,11 @@ public class TrackInfoServiceImpl implements TrackInfoService {
      */
     public User getTeacherId(TrackInfo info) {
         // 面试官
+        User teacher = new User();
         if (null != info.getTechnicalInterviewer()) {
-            user.setUid(info.getTechnicalInterviewer());
+            teacher.setUid(info.getTechnicalInterviewer());
         }
-        return user;
+        return teacher;
     }
 
     /**

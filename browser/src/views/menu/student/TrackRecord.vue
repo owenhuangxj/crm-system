@@ -120,7 +120,7 @@
                     predictTrade:getNowDate(),
                     trackDesc:"",
                     trailsman: user.state.uid,
-                    stuNumber:"20191121870",
+                    stuNumber:"",
                 }
             }
         },
@@ -134,6 +134,7 @@
     },
     created(){
       this.stuNum = stuNumber
+      this.form.stuNumber = stuNumber
     },
         mounted(){
           this.getTrackInfo();
