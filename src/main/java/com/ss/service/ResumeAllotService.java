@@ -19,7 +19,7 @@ public interface ResumeAllotService {
     /*多条件分页查询*/
     IPage<Student> getOrginStudent(Long current, Long size, String value, Integer columnIndex);
 
-    Integer allotResume(Integer key,Integer[]value,Integer way,String time);
+    Integer allotResume(Integer key, Integer[] value, Integer way, String time);
 
     List<SysUser>getAllUser();
 
