@@ -2,13 +2,31 @@
   <!--主界面-->
   <div id="dataGrid">
 
-    <div id="tool-bar">
-      <el-button @click="toggleSelection()"><i class="el-icon-close"></i>取消选择</el-button>
-      <el-button><i class="el-icon-plus" @click=dialog(0)></i>新增简历</el-button>
-      <el-button><i class="el-icon-upload" @click=dialog(1)>简历导入</i> </el-button>
-      <el-button><i class="el-icon-message" @click=dialog(2)>简历分配</i> </el-button>
-      <el-button><i class="el-icon-delete"></i> 删除简历</el-button>
+    <el-dialog id="searchDialog"
+      title="请输入查询条件"
+      :visible.sync="searchDialog">
+      <div>
+        <el-radio-group v-model="searchButton" size="medium">
+          <el-radio-button label="姓名"></el-radio-button>
+          <el-radio-button label="电话"></el-radio-button>
+        </el-radio-group>
+      </div>
+      <div>
+        <el-input  v-model="searchValue" style="width:60%" placeholder="请输出查询内容"></el-input>
+      </div>
+      <div>
+        <el-button @click="getData">提交</el-button>
+      </div>
+    </el-dialog>
 
+    <div id="tool-bar">
+      <el-button @click="toggleSelection()"><i class="el-icon-close">取消选择</i></el-button>
+      <el-button><i class="el-icon-search" @click=dialog(-1)>条件查询</i></el-button>
+      <el-button @click=dialog()> <NewBasicInformation></NewBasicInformation></el-button>
+      <el-button @click=dialog()>  <ResumeAllot  :selectedId="selectedId" ></ResumeAllot></el-button>
+      <el-button @click=dialog()><ResumeImport> </ResumeImport> </el-button>
+
+      <el-button><i class="el-icon-delete" @click=dialog(3)>删除简历</i> </el-button>
     </div>
     <div id="table">
       <el-table ref="multipleTable" :data="resumeData" tooltip-effect="dark"  :default-sort = "{prop: 'date', order: 'descending'}"  @selection-change="selectionChange">
@@ -27,14 +45,13 @@
         <el-table-column prop="stuName" label="姓名" width="120"></el-table-column>
         <el-table-column prop="stuSex" label="性别" width="120"></el-table-column>
         <el-table-column prop="stuPhoneNum" label="电话" width="120"></el-table-column>
-        <el-table-column prop="stuCreateTime" label="录入日期" width="120"></el-table-column>
+        <el-table-column prop="stuCreateTime" label="录入日期" width="200"></el-table-column>
         <el-table-column prop="stuSource" label="来源" width="120"></el-table-column>
         <el-table-column prop="stuChannel" label="方式" width="120"></el-table-column>
       </el-table>
     </div>
 
     <div id="pagination">
-
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
@@ -45,25 +62,6 @@
         :total="totalData">
       </el-pagination>
     </div>
-
-
-    <el-dialog
-      title="简历分配"
-      :visible.sync="allotDialog"
-      :before-close="handleClose">
-      <ResumeAllot></ResumeAllot>
-    </el-dialog>
-
-      <el-dialog
-        title="简历导入"
-        :visible.sync="importDialog"
-        :before-close="handleClose">
-   <ResumeImport> </ResumeImport>
-
-    </el-dialog>
-
-
-
   </div>
 
 </template>
@@ -71,44 +69,34 @@
 <script>
   import  ResumeAllot  from './resume-allot.vue';
   import  ResumeImport  from './resume-import.vue';
+  import  NewBasicInformation  from './new-basic-information.vue';
   import allotApi from  '@/api/allot';
-
-  let resumeData=[{
-    stuName: '12',
-    stuNumber: '321',
-    stuSex: '321',
-    stuPhoneNum: '321',
-    stuAddress: '321',
-    stuCreateTime:"11",
-    stuSource: '21321',
-    stuWork: '321',
-    stuProject: '123',
-    stuTrained: '123',
-  }
-  ];
 
   let totalData=1;
 
   export default {
     components: {
       ResumeAllot,
-      ResumeImport
+      ResumeImport,
+      NewBasicInformation,
     },
 
     data() {
       return {
-        resumeData: null,
+        resumeData: [],
         multipleSelection: [],
-        currentPage: 0,
+        currentPage: 1,
+        pageSize:10,
+        searchButton:"姓名",
+        searchValue:'',
         totalData:totalData,
-        allotDialog: false,
-        importDialog: false,
-        newDialog:false,
-        selectedId:null,
+        searchDialog:false,
+        selectedId:[],
       }
     },
     created() {
       this.getData();
+
     },
     computed: {
       data(){
@@ -129,24 +117,59 @@
     methods:{
       //获得初始化数据
       getData(){
-        allotApi.getUnAllotResume().then(response => {
+        let column ='0';
+        if(this.searchButton=="姓名"){
+          column='1';
+        }else{
+          column='2';
+        }
+
+        let param=new URLSearchParams();
+        param.append("current",this.currentPage);
+        param.append("size",this.pageSize);
+        param.append("column",column);
+        param.append("value",this.searchValue);
+
+        allotApi.getUnAllotResume(param).then(response => {
           this.resumeData = response.data.data.records;
-          /*this.resumeData=res.data.value.records;
-          this.curentPage=res.data.value.current;
-          this.totalData=res.data.value.total;*/
+          this.searchDialog=false;
+        })
+
+      },
+      delRows(){
+        let param=new URLSearchParams();
+        param.append("stuIds",this.selectedId)
+        allotApi.delByStuId(param).then(response => {
+          this.resumeData = response.data;
         })
       },
       /**打开对话框*/
       dialog(index){
+        this.getSelectedId();
         switch (index) {
-          case 0: this.newDialog=true;
+          case -1:/*搜索*/
+            this.searchDialog=true;
           break;
-          case 1: this.importDialog=true;
-          break;
-          case 2: this.allotDialog=true;
-          break;
+          case 3:/*删除简历*/
+            if(this.selectedId.length==0){
+              this.$confirm('请选择您要删除的简历？')
+                .then(_ => {
+                  done();
+                })
+                .catch(_ => {
+                });
+            }else{
+              this.$confirm('删除后不可恢复请确认？')
+                .then(_ => {
+                  this.delRows();
+                  done();
+                })
+                .catch(_ => {
+                });
+            }
+            break;
         }
-        this.getSelectedId()
+
       },
       handleClick(row) {
         alert("查看的内容"+JSON.stringify(row))
@@ -161,14 +184,11 @@
       },
       getSelectedId(){
         let selectedId=new Array() ;
-
       for (let item of this.multipleSelection){
-      selectedId.push(item.stuNumber);
+      selectedId.push(item.stuId);
       }
+      console.log(selectedId);
         this.selectedId=selectedId;
-      },
-      doubleclick(index){
-        alert("你好我是双击事件"+JSON.stringify(index) )
       },
       handlePrevPage(val){
         console.log(`上页 ${val} 条`);
@@ -185,7 +205,7 @@
           });
       },
       handleSizeChange(val) {
-        this.cur_page_size=val;
+        this.pageSize=val;
         this.getData();
         console.log(`每页 ${val} 条`);
       },
@@ -226,6 +246,12 @@
           console.log('selectedId new:', newVal, 'old:', oldVal);
         },
       },
+      searchButton:{
+        deep: true,
+        handler: function (newVal, oldVal) {
+          console.log('selectedId new:', newVal, 'old:', oldVal);
+        },
+      },
 
     }
 
@@ -256,4 +282,15 @@
     stripe:true;
     width: 100%;
   }
+
+  #searchDialog{
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    padding-left: 2em;
+    padding-right: 2em;
+  }
+  #searchDialog div{
+    margin: 0.5em 0.5em;
+  }
+
 </style>

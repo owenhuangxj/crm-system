@@ -138,7 +138,6 @@ public class AuthController {
         }else{
             //返回登录用户的信息给前台，含用户的所有角色和权限
             return Json.succ(oper)
-                    .data("uid",user.getUid())
                     .data("name",user.getUname())
                     .data("nick",user.getNick())
                     .data("avator","")

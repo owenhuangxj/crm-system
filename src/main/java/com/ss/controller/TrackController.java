@@ -39,25 +39,17 @@ public class TrackController {
      * @param ti 跟踪信息页面数据
      * @return 是否添加成功
      */
+    @CrossOrigin
     @ResponseBody
     @PostMapping(value = "/addTrack")
-    public JSON addTrackMessage(@RequestBody String body) {
-        System.out.println(body);
-        TrackInfo ti = JSON.parseArray(body, TrackInfo.class).get(0);
-        System.out.println(ti);
-        return null;
+    public Boolean addTrackMessage(@RequestBody TrackInfo ti) {
+        // 转换时间格式
+        ti.setTrackTime(DateUtil.changeDateTime(ti.getTrackTime()));
+        ti.setNextTrackTime(DateUtil.changeDateTime(ti.getNextTrackTime()));
+        ti.setPredictTime(DateUtil.changeDateTime(ti.getPredictTime()));
+        ti.setPredictTrade(DateUtil.changeDateTime(ti.getPredictTrade()));
+        return tis.addTrackInfoRecord(ti);
     }
-    //    @CrossOrigin
-//    @ResponseBody
-//    @PostMapping(value = "/addTrack")
-//    public Boolean addTrackMessage(@RequestBody TrackInfo ti) {
-//        // 转换时间格式
-//        ti.setTrackTime(DateUtil.changeDateTime(ti.getTrackTime()));
-//        ti.setNextTrackTime(DateUtil.changeDateTime(ti.getNextTrackTime()));
-//        ti.setPredictTime(DateUtil.changeDateTime(ti.getPredictTime()));
-//        ti.setPredictTrade(DateUtil.changeDateTime(ti.getPredictTrade()));
-//        return tis.addTrackInfoRecord(ti);
-//    }
 
     @GetMapping("/tailAfter")
     public String track() {

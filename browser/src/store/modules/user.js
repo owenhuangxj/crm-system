@@ -8,7 +8,6 @@ const user = {
     status: '',
     code: '',
     token: getToken(),
-    uid:'',
     name: '',
     nick: '',
     avatar: avatorImg,
@@ -36,9 +35,6 @@ const user = {
     },
     SET_STATUS: (state, status) => {
       state.status = status
-    },
-    SET_UID: (state, uid)=>{
-      state.uid = uid
     },
     SET_NAME: (state, name) => {
       state.name = name
@@ -94,7 +90,6 @@ const user = {
           commit('SET_PERMS', res.data.perms)
           commit('SET_NICK', res.data.nick)
           commit('SET_NAME', res.data.name)
-          commit('SET_UID', res.data.uid)
           resolve(res)
         }).catch(error => {
           reject(error)

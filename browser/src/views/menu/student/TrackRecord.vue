@@ -90,7 +90,6 @@
 </template>
 <script>
   import stuApi from '@/api/student'
-  import user from '@/store/modules/user'
   export default{
         // props:["stuNum"],
         data(){
@@ -118,7 +117,7 @@
                     predictTime:"",
                     predictTrade:"",
                     trackDesc:"",
-                    trailsman: user.state.uid,
+                    trailsman: "1",
                     stuNumber:"20191121870",
                 }
             }
@@ -136,7 +135,6 @@
             },
             onSubmit() {
                 let trackInfo = JSON.stringify(this.form);
-                console.log(trackInfo)
                 stuApi.addNewTrackInfo(trackInfo).then(function () {
                   console.log("成功")
                 }).catch(function () {
