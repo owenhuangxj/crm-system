@@ -123,10 +123,9 @@
         stuCredentials:"",
         stuPerformance:"",
     }
-    let oldData,editData;
+    let oldData,editData,stuNumber;
     export default {
         data(){
-          // props:["stuNum"],
             return {
                 labelPosition: 'top',
                 calContro:true,
@@ -134,10 +133,21 @@
                 pack:'el-icon-arrow-down',
                 isEdit:true,
                 basicInfo: info,
-                stuNum:'20191121870'
+                stuNum:""
             }
         },
-        mounted(){
+      beforeCreate(){
+          if(this.$route.params.stuNum != undefined){
+            stuNumber = this.$route.params.stuNum
+            localStorage.setItem("localStuNum",this.$route.params.stuNum)
+          }else{
+            stuNumber = localStorage.getItem("localStuNum")
+          }
+      },
+      created(){
+        this.stuNum = stuNumber
+      },
+      mounted(){
           this.getStuInfo();
         },
         methods : {

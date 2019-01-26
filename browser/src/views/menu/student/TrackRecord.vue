@@ -92,11 +92,11 @@
   import stuApi from '@/api/student'
   import user from '@/store/modules/user'
   import {getNowDate} from '@/utils/dateTime'
+  let stuNumber;
   export default{
-        // props:["stuNum"],
         data(){
             return {
-                stuNum:'20191121870',
+                stuNum:"",
                 tableData:[{
                     trackTime: '2012-05-36 12:65:87',
                     priority: '低',
@@ -124,6 +124,17 @@
                 }
             }
         },
+    beforeCreate(){
+      if(this.$route.params.stuNum != undefined){
+        stuNumber = this.$route.params.stuNum
+        localStorage.setItem("localStuNum",this.$route.params.stuNum)
+      }else{
+        stuNumber = localStorage.getItem("localStuNum")
+      }
+    },
+    created(){
+      this.stuNum = stuNumber
+    },
         mounted(){
           this.getTrackInfo();
         },
