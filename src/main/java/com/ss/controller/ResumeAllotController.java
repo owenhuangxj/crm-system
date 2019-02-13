@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Map;
 
 @Controller
@@ -66,10 +67,9 @@ public class ResumeAllotController {
     }
     @RequestMapping("/allotResume")
     public @ResponseBody
-    Json AllotResume(@RequestParam("key")String key,@RequestParam("value")Integer value[],@RequestParam("allotTime")String time,Integer way) {
-        System.out.println(key+" "+value[1]+"  "+way+"   "+time);
-
-        Integer rows = ras.allotResume(1,value,way,time+"");
+    Json AllotResume(@RequestParam("key")String[] key,@RequestParam("value")String value[],@RequestParam("allotTime")Integer []time,Integer way) {
+        System.out.println(Arrays.deepToString(key)+" "+ Arrays.deepToString(value)+"  "+way+"   "+ Arrays.deepToString(time));
+        Integer rows = ras.allotResume(key,value,way,time);
         return Json.succ("allot").data("allot",rows);
     }
     @RequestMapping("/delByStuId")
