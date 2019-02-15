@@ -1,19 +1,10 @@
 <template>
   <div>
-
-
-
   <span  @click="allotDialog=true"><i  class="el-icon-message"  >简历分配</i> </span>
-
   <div id="resumeAllot">
-  <el-dialog  title="简历分配"
-      :visible.sync="allotDialog"
-    :before-close="handleClose"
-    :close-on-click-modal=false
-  >
-
+  <el-dialog  title="简历分配" :visible.sync="allotDialog" :before-close="handleClose" :close-on-click-modal=false>
             <div id="tab_title" >
-              <a @click="tabSwitch(1)">随机分配</a> <a  id="fixed" @click="tabSwitch(0)">固定分配</a>
+              <a @click="tabSwitch(1)">随机分配</a>  <a id="fixed" @click="tabSwitch(0)">固定分配</a>
             </div>
             <!--横线--> <!--滑动条-->
             <div id="tabScroll" class="split"><div  id="scrollBlock"></div></div>
@@ -60,7 +51,7 @@
 
   export default {
 
-    props:["selectedId"],
+    props:["selectedId","selectedNum"],
 
         data: function () {
             return {
@@ -94,8 +85,6 @@
                     }]
                 },
                 radio: 'allotTime',
-                // 标签名
-                title: "简历分配",
                 //数字框每次增量
                 val: 5,
                 //初始量
@@ -105,7 +94,7 @@
                 employeeSelect: [],
                 allotDialog:false,
                 allotTime:'' ,
-                index:'',
+                index:1,
             }
         },
         created() {
@@ -117,16 +106,16 @@
             },
         },
         mounted: function () {
+      /*获取所有员工*/
           allotApi.getAllUsers().then(response => {
             this.employees = response.data.user;
             console.log(this.employees)
           })
         },
         methods: {
-            //选项卡变化
+            //选项卡变化  修改index id 设置界面变化
             tabSwitch(index) {
             /*0 是固定分配 ,1是随机分配*/
-              console.log(this.selectedId);
               switch (index){
                 case 0:
                   if(0==this.selectedId.length){
@@ -147,49 +136,60 @@
                   this.num=this.selectedId.length;
                   break;
               }
-                console.log('执行Tab');
             },
-
-
-            setAllotTime(way) {
+            /*设置分配时间设置*/
+          setAllotTime(way) {
               switch (way){
                 case 'now':
                   this.allotTime= -1;
+                  console.log('now',this.allotTime);
                   document.getElementById("timePicker").style.display = "none";
                   break;
                 case 'fixed':
                   document.getElementById("timePicker").style.display = "block";
+                  console.log('fixed',this.allotTime);
                   break;
               }
             },
-
-            handleClose(done) {
-                this.$confirm('确认关闭？')
-                    .then(_ => {
-                        done();
-                    })
-                    .catch(_ => {
-                    });
-            },
           allot(){
-            let params=new URLSearchParams();
 
+            this.transferTime();
+            console.log(this.selectedNum,'12',this.selectedId);
+            let params=new URLSearchParams();
             switch (this.index) {
+              /*固定分配的设置*/
               case 0:
-                params.append("key",this.employeeSelect[0]);
-                params.append("value",this.selectedId);
+                params.append("key", Array.of(this.employeeSelect[0]));
+                params.append("value",this.selectedNum);
                 params.append("way",0);
-                params.append("allotTime",this.allotTime);
                 break;
+                /*随机分配的设置*/
               case 1:
+                params.append("key",this.employeeSelect);
+                params.append("value",this.num);
+                params.append("way",1);
               break;
             }
-            console.log(params.get("key"))
+
+            params.append("allotTime",this.transferTime());
 
             allotApi.allotResume(params).then(response => {
               this.employees = response.data;
             })
-          }
+          },
+          transferTime(){
+            if(this.allotTime==-1){
+              return Array.of(-1);
+            }else{
+              return [this.allotTime.getFullYear(),this.allotTime.getMonth()+1 ,this.allotTime.getDate(),this.allotTime.getHours(),this.allotTime.getMinutes(),this.allotTime.getSeconds()];
+            }
+          },
+          /*关闭窗口的方法*/
+          handleClose(done) {
+            this.$confirm('确认关闭？').then(_ => { done();}) .catch(_ => { });
+          },
+
+
         },
         /*监控函数*/
         watch: {
@@ -202,16 +202,14 @@
           employeeSelect:{
             deep: true,
             handler: function (newVal, oldVal) {
-              console.log('employeeSelect:','new:', newVal, 'old:', oldVal);
+              console.log('employeeSelect:','选中的员工',newVal, 'old:', oldVal);
             },
           },
           index:{
             deep: true,
             handler: function (newVal, oldVal) {
-
               console.log("index:",'new:', newVal, 'old:', oldVal);
             },
-
           }
             }
 

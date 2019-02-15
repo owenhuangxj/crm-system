@@ -72,10 +72,10 @@ public class csvTests {
 
     @Test
     public void or(){
-        HashMap<Integer, Integer> map = new HashMap<>();
-        map.put(40,2);
-        map.put(42,45);
-        map.put(43,2);
+        HashMap<String, String> map = new HashMap<>();
+       /* map.put("40",2);
+        map.put("42",45);
+        map.put("42",2);*/
         ram.updateBatch(map);
 
 
@@ -95,7 +95,12 @@ public class csvTests {
         ram.ImportResume("C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/test.csv");
     }
 
+    @Test
+    public void TimedTest(){
 
+
+
+    }
 
 }
 

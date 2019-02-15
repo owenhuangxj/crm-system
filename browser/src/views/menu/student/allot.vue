@@ -23,7 +23,7 @@
       <el-button @click="toggleSelection()"><i class="el-icon-close">取消选择</i></el-button>
       <el-button><i class="el-icon-search" @click=dialog(-1)>条件查询</i></el-button>
       <el-button @click=dialog()> <NewBasicInformation></NewBasicInformation></el-button>
-      <el-button @click=dialog()>  <ResumeAllot  :selectedId="selectedId" ></ResumeAllot></el-button>
+      <el-button @click=dialog()>  <ResumeAllot  :selectedId="selectedId" :selectedNum="selectedNum" ></ResumeAllot></el-button>
       <el-button @click=dialog()><ResumeImport> </ResumeImport> </el-button>
 
       <el-button><i class="el-icon-delete" @click=dialog(3)>删除简历</i> </el-button>
@@ -43,6 +43,7 @@
         <el-table-column type="selection"width="55"></el-table-column>
         <el-table-column label="序号" type="index" width="50"></el-table-column>
         <el-table-column prop="stuName" label="姓名" width="120"></el-table-column>
+        <el-table-column prop="stuNumber" label="编号" width="120"></el-table-column>
         <el-table-column prop="stuSex" label="性别" width="120"></el-table-column>
         <el-table-column prop="stuPhoneNum" label="电话" width="120"></el-table-column>
         <el-table-column prop="stuCreateTime" label="录入日期" width="200"></el-table-column>
@@ -92,6 +93,7 @@
         totalData:totalData,
         searchDialog:false,
         selectedId:[],
+        selectedNum:[],
       }
     },
     created() {
@@ -146,6 +148,7 @@
       /**打开对话框*/
       dialog(index){
         this.getSelectedId();
+        this.getSelectedNum();
         switch (index) {
           case -1:/*搜索*/
             this.searchDialog=true;
@@ -189,6 +192,14 @@
       }
       console.log(selectedId);
         this.selectedId=selectedId;
+      },
+      getSelectedNum(){
+        let selectedNum=new Array() ;
+        for (let item of this.multipleSelection){
+          selectedNum.push(item.stuNumber);
+        }
+        console.log(selectedNum);
+        this.selectedNum=selectedNum;
       },
       handlePrevPage(val){
         console.log(`上页 ${val} 条`);
@@ -244,6 +255,12 @@
         deep: true,
         handler: function (newVal, oldVal) {
           console.log('selectedId new:', newVal, 'old:', oldVal);
+        },
+      },
+      selectedNum:{
+        deep: true,
+        handler: function (newVal, oldVal) {
+          console.log('selectedNum new:', newVal, 'old:', oldVal);
         },
       },
       searchButton:{

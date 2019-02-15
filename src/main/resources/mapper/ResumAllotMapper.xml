@@ -14,18 +14,15 @@
             UPDATE t_student SET
             <trim prefix="consult_id =(case" suffix="end)">
                 <foreach item="value" index="key" collection="map.entrySet()">
-                    WHEN stu_id=#{key} THEN #{value}
+                    WHEN stu_number=#{key} THEN #{value}
                 </foreach>
             </trim>
             ,stu_status=1
-            where stu_id in(
+            where stu_number in(
             <foreach collection="map.entrySet()" separator="," item="item" index="key">
                 ${key}
             </foreach>
             )
-
-
-
 
         </update>
 

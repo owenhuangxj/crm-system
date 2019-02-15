@@ -23,7 +23,7 @@ public interface ResumeAllotMapper  extends BaseMapper<Student> {
         /*多条件分页查询*/
     IPage<Student> selectPage(IPage<Student> page, @Param("ew") Wrapper<Student> queryWrapper);
         /*分配简历*/
-     Integer updateBatch(@Param("map") Map<Integer, Integer> map);
+     Integer updateBatch(@Param("map") Map<String, String> map);
 
 
 
